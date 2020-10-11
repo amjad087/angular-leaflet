@@ -1,19 +1,26 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import * as L from 'leaflet';
 
 import { LocationService } from './location.service';
 
+const ITEMS = [
+  { user: 'Amjad', loc: 'Islamabad', title: 'Title1', uploaded: '20m'},
+  { user: 'Khan', loc: 'Rawalpindi', title: 'Title2', uploaded: '15m'},
+  { user: 'Talha', loc: 'Peshawar', title: 'Title3', uploaded: '25m'},
+  { user: 'Zarar', loc: 'Bannu', title: 'Title4', uploaded: '30m'},
+
+];
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css']
 })
-export class MapComponent implements AfterViewInit {
-  private map;
-
+export class MapComponent implements OnInit {
+  private map: any;
+  items = ITEMS;
   constructor(private locService: LocationService) { }
 
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
 
     this.initMap();
   }
@@ -24,8 +31,13 @@ export class MapComponent implements AfterViewInit {
       // creating leaflat map object
       this.map = L.map('map', {
         center: [ location.lat, location.lng ], // center map according to the current location
-        zoom: 5 // set initial zoom level
+        zoom: 5, // set initial zoom level
+        zoomControl: false
       });
+
+      L.control.zoom({
+        position: 'bottomright'
+      }).addTo(this.map);
 
       // using openstreetmap tiles
       const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

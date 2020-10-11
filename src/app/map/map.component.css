@@ -1,3 +1,17 @@
+.map-side-bar {
+  position: absolute;
+  top: 4rem;
+  left: 0;
+  right: 0;
+  width: 25%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  overflow: auto;
+  margin-top: 5px;
+  height: 100%;
+}
 .map-container {
   position: absolute;
   top: 4rem;
@@ -5,15 +19,45 @@
   right: 0;
   bottom: 0;
   margin: 1px;
+  margin-top: 5px;
   margin-bottom: 5px;
 
 }
 
+.add-item {
+  z-index: 1001; /* leaflet map uses z-index of 1000, to make something on top of the map, it must be >= 1001 */
+  margin: 10px;
+}
+
 .map-frame {
-  border: 1px solid black;
   height: 100%;
 }
 
 #map {
   height: 100%;
+}
+
+mat-card {
+  width: 80%;
+  margin: auto;
+}
+
+.side-item {
+  width: 98%;
+  margin: 0;
+  display: block;
+  background-color: #edd;
+  border: 1px solid #dcc;
+  margin-bottom: 5px;
+}
+
+.side-inner-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.example-card {
+  background-color: #3f51b5 !important;
 }

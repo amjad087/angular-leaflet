@@ -1,5 +1,43 @@
-<div class="map-container">
-  <div class="map-frame">
-    <div id="map"></div>
+<div class="map-side-bar">
+  <div class="side-item" *ngFor="let item of items">
+    <div class="side-inner-item">
+      <h3>{{item.user}}</h3>
+      <h3>{{item.loc}}</h3>
+    </div>
+    <div class="side-inner-item">
+      <h3>[{{item.title}}]</h3>
+    </div>
+    <div class="side-inner-item">
+      <h3>&nbsp;</h3>
+      <h3>{{item.uploaded}}</h3>
+    </div>
   </div>
 </div>
+<div class="map-container">
+  <div class="map-frame">
+    <div id="map">
+      <button mat-raised-button color="accent" class="add-item"><mat-icon>add_circle_outline</mat-icon></button>
+    </div>
+  </div>
+</div>
+
+<!-- <mat-sidenav-container autosize>
+  <mat-sidenav mode="side" opened="true">
+    <h2>Hellow Drawer</h2>
+    <h3>Hellow Drawer</h3>
+    <h3>Hellow Drawer</h3>
+    <h3>Hellow Drawer</h3>
+    <h3>Hellow Drawer</h3>
+    <h3>Hellow Drawer</h3>
+    <h3>Hellow Drawer</h3>
+    <h3>Hellow Drawer</h3>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <h3>map</h3>
+    <div class="map-container">
+      <div class="map-frame">
+        <div id="map"></div>
+      </div>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container> -->
