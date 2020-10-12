@@ -1,0 +1,25 @@
+<mat-card>
+  <div *ngIf="isLoading">
+    <mat-spinner></mat-spinner>
+  </div>
+  <div *ngIf="!isLoading && !isCurrLocAdded">
+    <h2>An error occured, please check your network connection!</h2>
+  </div>
+  <div *ngIf="!isLoading && isCurrLocAdded">
+    <h1>Create Item</h1>
+    <mat-form-field class="example-full-width">
+      <mat-label>Subject</mat-label>
+      <input matInput placeholder="Item's Title">
+    </mat-form-field>
+    <mat-form-field class="example-full-width">
+      <mat-label>Body</mat-label>
+      <textarea matInput rows="3" placeholder="Item's Body"></textarea>
+    </mat-form-field>
+    <mat-slide-toggle [(ngModel)]="isChecked">Category: {{isChecked ? 'B' : 'A'}}</mat-slide-toggle>
+    <mat-divider></mat-divider>
+    <mat-card-actions>
+      <button mat-raised-button color = "accent">Create</button>
+      <button mat-raised-button color = "warn">Cancel</button>
+    </mat-card-actions>
+  </div>
+</mat-card>

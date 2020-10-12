@@ -7,6 +7,7 @@ export class LocationService {
 
   constructor() { }
 
+  // Get current location using navigator
   getCurrentLocation(): Promise<any> {
     return new Promise((resolve, reject) => {
 
