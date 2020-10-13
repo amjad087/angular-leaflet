@@ -5,7 +5,7 @@
   <div *ngIf="!isLoading && !isCurrLocAdded">
     <h2>An error occured, please check your network connection!</h2>
   </div>
-  <div *ngIf="!isLoading && isCurrLocAdded">
+  <div class="create-item" *ngIf="!isLoading && isCurrLocAdded">
     <h1>Create Item</h1>
     <mat-form-field class="example-full-width">
       <mat-label>Subject</mat-label>
@@ -16,7 +16,9 @@
       <textarea matInput rows="3" placeholder="Item's Body"></textarea>
     </mat-form-field>
     <mat-slide-toggle [(ngModel)]="isChecked">Category: {{isChecked ? 'B' : 'A'}}</mat-slide-toggle>
-    <mat-divider></mat-divider>
+  </div>
+  <mat-divider></mat-divider>
+  <div class="actions">
     <mat-card-actions>
       <button mat-raised-button color = "accent">Create</button>
       <button mat-raised-button color = "warn">Cancel</button>

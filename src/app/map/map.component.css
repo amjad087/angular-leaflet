@@ -1,6 +1,7 @@
-.spinner {
-  text-align: center;
+mat-spinner {
+  margin: auto;
 }
+
 .map-side-bar {
   position: absolute;
   top: 4rem;
