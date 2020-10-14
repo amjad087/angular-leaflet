@@ -48,7 +48,6 @@ mat-card {
 
 .side-item {
   width: 98%;
-  margin: 0;
   display: block;
   /* background-color: #edd;
   border: 1px solid #dcc; */
@@ -61,6 +60,8 @@ mat-card {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  padding: 5px 10px;
+
 }
 
 .example-card {

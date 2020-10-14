@@ -11,12 +11,12 @@ export class LocationService {
   getCurrentLocation(): Promise<any> {
     return new Promise((resolve, reject) => {
 
-      navigator.geolocation.getCurrentPosition(resp => {
-          resolve({lat: resp.coords.latitude, lng: resp.coords.longitude});
-        },
-        err => {
-          reject(err);
-        });
+      navigator.geolocation.getCurrentPosition(res => {
+        resolve({lat: res.coords.latitude, lng: res.coords.longitude});
+      },
+      err => {
+        reject(err);
+      });
     });
   }
 }

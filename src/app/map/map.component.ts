@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import * as L from 'leaflet';
 
-import { Item } from './../items/item.model';
+import { Item } from '../models/item.model';
 import { LocationService } from '../services/location.service';
 import { ItemsService } from '../services/items.service';
 
@@ -53,6 +53,18 @@ export class MapComponent implements OnInit {
       });
       tiles.addTo(this.map);
 
+      this.map.on('click', (e: any) => {
+        // alert('Lat, Lon : ' + e.latlng.lat + ', ' + e.latlng.lng);
+      });
+
+      L.marker([location.lat, location.lng], {draggable: 'true'}).addTo(this.map);
+      const marker = new L.marker([location.lat, location.lng], {draggable: 'true'});
+      marker.on('dragend', event => {
+        const tempMarker = event.target;
+        const position = marker.getLatLng();
+        tempMarker.setLatLng(new L.LatLng(position.lat, position.lng), {draggable: 'true'});
+      });
+      this.map.addLayer(marker);
     })
     .catch(err => {
       console.log(err.code);

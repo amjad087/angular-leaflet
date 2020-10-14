@@ -10,13 +10,12 @@ import { LocationService } from '../../services/location.service';
 })
 export class CreateItemComponent implements OnInit {
   isChecked = false;
-  constructor(private locService: LocationService, private itemService: ItemsService) { }
   currLat = null;
   currLong = null;
   isCurrLocAdded = false;
   isLoading = true;
-  ngOnInit(): void {
 
+  constructor(private locService: LocationService, private itemService: ItemsService) {
     this.locService.getCurrentLocation()
     .then(loc => {
       this.isCurrLocAdded = true;
@@ -32,11 +31,17 @@ export class CreateItemComponent implements OnInit {
       this.isCurrLocAdded = false;
       this.isLoading = false;
     });
+  }
+  ngOnInit(): void {
 
   }
 
   onCreateItem() {
-    this.itemService.createItem();
+    this.itemService.getAddressFromLatLong(this.currLat, this.currLong).subscribe(result => {
+      console.log(result.address.city);
+
+    });
+    // this.itemService.createItem();
   }
 
 }
