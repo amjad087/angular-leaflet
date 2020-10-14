@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors')
 const mongoose = require('mongoose');
 
-const users = require('./routes/users');
+const userRoutes = require('./routes/users');
 
 const app = express();
 
@@ -25,6 +25,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser())
 
 //user routes
-app.use('/api/users', users);
+app.use('/api/users', userRoutes);
 
 module.exports = app;

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { AuthService } from './../auth.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-signup',
@@ -25,7 +25,8 @@ export class SignupComponent implements OnInit {
     if (!this.form.valid) {
       return;
     }
-    this.authService.signup('test', 'test@example.com', 'test');
+
+    this.authService.createUser(this.form.get('username').value, this.form.get('email').value, this.form.get('password').value);
     this.form.reset();
   }
 

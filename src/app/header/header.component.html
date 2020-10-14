@@ -2,10 +2,23 @@
   <span>My App</span>
   <span class="spacer"></span>
   <ul>
-    <li><a mat-button routerLink = "/login">Sign In</a></li>
-    <li><a mat-button routerLink = "/signup">Sign Up</a></li>
-    <li><a mat-raised-button color="accent" routerLink = "/"><mat-icon>home</mat-icon></a></li>
-    <li><a mat-raised-button color="accent" routerLink = "/"><mat-icon>notifications</mat-icon></a></li>
-    <li><a mat-raised-button color="accent" routerLink = "/"><mat-icon>account_circle</mat-icon></a></li>
+    <li *ngIf="isUserAuthenticated">
+      <button mat-raised-button (click) = "onLogout()">Logout</button>
+    </li>
+    <li *ngIf="!isUserAuthenticated">
+      <a mat-button routerLink = "/login" routerLinkActive="mat-accent">Sign In</a>
+    </li>
+    <li *ngIf="!isUserAuthenticated">
+      <a mat-button routerLink = "/signup" routerLinkActive="mat-accent">Sign Up</a>
+    </li>
+    <li *ngIf="isUserAuthenticated">
+      <a mat-raised-button routerLink = "/" routerLinkActive="mat-accent"><mat-icon>home</mat-icon></a>
+    </li>
+    <li *ngIf="isUserAuthenticated">
+      <a mat-raised-button routerLink = "/notification" routerLinkActive="mat-accent"><mat-icon>notifications</mat-icon></a>
+    </li>
+    <li *ngIf="isUserAuthenticated">
+      <a mat-raised-button routerLink = "/profile" routerLinkActive="mat-accent"><mat-icon>account_circle</mat-icon></a>
+    </li>
   </ul>
 </mat-toolbar>

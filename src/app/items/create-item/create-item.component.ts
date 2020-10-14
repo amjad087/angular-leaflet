@@ -1,4 +1,4 @@
-import { LocationService } from './../../map/location.service';
+import { LocationService } from '../../services/location.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({

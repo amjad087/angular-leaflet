@@ -3,8 +3,8 @@ import { Router } from '@angular/router';
 import * as L from 'leaflet';
 
 import { Item } from './../items/item.model';
-import { LocationService } from './location.service';
-import { ItemsService } from './../items/items.service';
+import { LocationService } from '../services/location.service';
+import { ItemsService } from '../services/items.service';
 
 @Component({
   selector: 'app-map',

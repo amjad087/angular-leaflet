@@ -3,12 +3,12 @@
   <form [formGroup] = "form" (ngSubmit) = "onLogin()" *ngIf="!isLoading">
     <mat-form-field class="example-full-width">
       <input
-      type="email"
+      type="text"
       matInput
-      name="email"
-      formControlName="email"
-      placeholder="Email">
-      <mat-error *ngIf="form.get('email').touched && form.get('email').invalid"> Please provide a valid Email!</mat-error>
+      name="username_email"
+      formControlName="username_email"
+      placeholder="User Name or Email">
+      <mat-error *ngIf="form.get('username_email').touched && form.get('username_email').invalid"> Please provide a valid User name or Email!</mat-error>
     </mat-form-field>
     <mat-form-field class="example-full-width">
       <input
