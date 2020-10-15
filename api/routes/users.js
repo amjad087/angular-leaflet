@@ -3,7 +3,6 @@ const bcrypt = require('bcrypt'); // for hashing passwords
 const router = express.Router();
 const User = require('../models/user'); // user shcema
 const jwt = require('jsonwebtoken');
-const user = require('../models/user');
 
 /* GET users listing. */
 
@@ -58,7 +57,7 @@ router.post('/login', (req, res, next) => {
 
     //password matches, now create a token (for authorization)
     const token = jwt.sign(
-      { email: fetchedUser.email, id: fetchedUser._id },
+      { email: fetchedUser.email, userId: fetchedUser._id },
       'My_super_large_secret_string',
       { expiresIn: '1h' } // this token will expire in 1 hour
     );

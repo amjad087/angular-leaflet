@@ -50,8 +50,9 @@ mat-card {
   width: 98%;
   margin: 0;
   display: block;
-  background-color: #edd;
-  border: 1px solid #dcc;
+  /* background-color: #edd;
+  border: 1px solid #dcc; */
+  background-color: #e4e6f1;
   margin-bottom: 5px;
 }
 

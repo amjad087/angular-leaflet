@@ -1,5 +1,7 @@
-import { LocationService } from '../../services/location.service';
 import { Component, OnInit } from '@angular/core';
+
+import { ItemsService } from './../../services/items.service';
+import { LocationService } from '../../services/location.service';
 
 @Component({
   selector: 'app-create-item',
@@ -8,7 +10,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CreateItemComponent implements OnInit {
   isChecked = false;
-  constructor(private locService: LocationService) { }
+  constructor(private locService: LocationService, private itemService: ItemsService) { }
   currLat = null;
   currLong = null;
   isCurrLocAdded = false;
@@ -31,6 +33,10 @@ export class CreateItemComponent implements OnInit {
       this.isLoading = false;
     });
 
+  }
+
+  onCreateItem() {
+    this.itemService.createItem();
   }
 
 }
