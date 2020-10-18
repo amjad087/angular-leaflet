@@ -1,17 +1,25 @@
 const Item = require('../models/item');
 
 exports.createItem = (req, res, next) => {
-  cordArry = [];
-  cordArry.push(77.23);
-  cordArry.push(24.23);
+  let detectedLoc = [];
+  detectedLoc.push(req.body.detectedLoc.lng);
+  detectedLoc.push(req.body.detectedLoc.lat);
+
+  let providedLoc = [];
+  providedLoc.push(req.body.providedLoc.lng);
+  providedLoc.push(req.body.providedLoc.lat);
   const item = new Item({
     subject: req.body.subject,
     body: req.body.body,
     category: req.body.category,
-    created_by: req.userData.userId,
-    "loc": {
+    created_by: req.userData.username,
+    "detected_loc": {
       "type": "Point",
-      "coordinates": cordArry
+      "coordinates": detectedLoc
+    },
+    "provided_loc": {
+      "type": "Point",
+      "coordinates": providedLoc
     }
   });
 
@@ -34,6 +42,7 @@ exports.createItem = (req, res, next) => {
 exports.getItems = (req, res, next) => {
   Item.find().then(items => {
     res.status(201).json({
+      message: 'Items got successfully',
       items: items
     })
   })

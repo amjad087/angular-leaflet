@@ -4,7 +4,7 @@
 <div class="map-side-bar" *ngIf="!isLoading && mapLoaded">
   <div class="side-item" *ngFor="let item of items">
     <div class="side-inner-item">
-      <h3>{{item.createdBy}}</h3>
+      <h3>{{item.created_by}}</h3>
       <h3>{{item.location}}</h3>
     </div>
     <div class="side-inner-item">
@@ -12,7 +12,7 @@
     </div>
     <div class="side-inner-item">
       <h3>&nbsp;</h3>
-      <h3>{{item.createdDate}}</h3>
+      <h3>{{"item.createdDate"}}</h3>
     </div>
   </div>
 </div>

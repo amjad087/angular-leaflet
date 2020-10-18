@@ -5,23 +5,51 @@
   <div *ngIf="!isLoading && !isCurrLocAdded">
     <h2>An error occured, please check your network connection!</h2>
   </div>
-  <div class="create-item" *ngIf="!isLoading && isCurrLocAdded">
-    <h1>Create Item</h1>
-    <mat-form-field class="example-full-width">
-      <mat-label>Subject</mat-label>
-      <input matInput placeholder="Item's Title">
-    </mat-form-field>
-    <mat-form-field class="example-full-width">
-      <mat-label>Body</mat-label>
-      <textarea matInput rows="3" placeholder="Item's Body"></textarea>
-    </mat-form-field>
-    <mat-slide-toggle [(ngModel)]="isChecked">Category: {{isChecked ? 'B' : 'A'}}</mat-slide-toggle>
-  </div>
-  <mat-divider></mat-divider>
-  <div class="actions">
-    <mat-card-actions>
-      <button mat-raised-button color = "accent" (click) = "onCreateItem()">Create</button>
-      <button mat-raised-button color = "warn">Cancel</button>
-    </mat-card-actions>
-  </div>
+  <form [formGroup] = "form" (ngSubmit) = "onCreateItem()" *ngIf="!isLoading && isCurrLocAdded">
+    <div class="create-item">
+      <h1>Create Item</h1>
+
+      <mat-form-field class="example-full-width">
+        <mat-label>Subject</mat-label>
+        <input
+          type="text"
+          matInput
+          placeholder="Item's Title"
+          name="subject"
+          formControlName="subject"
+        >
+        <mat-error *ngIf="form.get('subject').touched && form.get('subject').invalid">
+          Please provide a valid subject!
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="example-full-width">
+        <mat-label>Body</mat-label>
+        <textarea
+          matInput
+          rows="3"
+          placeholder="Item's Body"
+          name="item_body"
+          formControlName="item_body"
+        ></textarea>
+        <mat-error *ngIf="form.get('item_body').touched && form.get('item_body').invalid">
+          Please provide a valid body!
+        </mat-error>
+      </mat-form-field>
+      <mat-slide-toggle
+        [(ngModel)]="isChecked"
+        name="category-toggle"
+        [ngModelOptions]="{standalone: true}"
+      >
+        Category: {{isChecked ? 'B' : 'A'}}
+      </mat-slide-toggle>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="actions">
+      <mat-card-actions>
+        <button mat-raised-button color = "accent" type="submit">Create</button>
+        <button mat-raised-button color = "warn" type="button">Cancel</button>
+      </mat-card-actions>
+    </div>
+</form>
+
 </mat-card>

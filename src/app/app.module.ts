@@ -15,6 +15,7 @@ import { SignupComponent } from './auth/signup/signup.component';
 import { AuthTokenInterceptor } from './interceptors/auth-token.interceptor';
 import { HttpErrorInterceptor } from './interceptors/http-error.interceptor';
 import { ErrorDialogComponent } from './error-dialog/error-dialog.component';
+import { MarkerDialogComponent } from './map/marker-dialog/marker-dialog.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { ErrorDialogComponent } from './error-dialog/error-dialog.component';
     CreateItemComponent,
     LoginComponent,
     SignupComponent,
-    ErrorDialogComponent
+    ErrorDialogComponent,
+    MarkerDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -40,6 +42,6 @@ import { ErrorDialogComponent } from './error-dialog/error-dialog.component';
     { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true }
   ],
   bootstrap: [AppComponent],
-  entryComponents: [ ErrorDialogComponent ]
+  entryComponents: [ ErrorDialogComponent, MarkerDialogComponent ]
 })
 export class AppModule { }

@@ -57,7 +57,7 @@ router.post('/login', (req, res, next) => {
 
     //password matches, now create a token (for authorization)
     const token = jwt.sign(
-      { email: fetchedUser.email, userId: fetchedUser._id },
+      { email: fetchedUser.email, userId: fetchedUser._id, username: fetchedUser.username },
       'My_super_large_secret_string',
       { expiresIn: '1h' } // this token will expire in 1 hour
     );

@@ -1,11 +1,16 @@
 const mongoose = require('mongoose');
+const { stringify } = require('querystring');
 
 const itemSchema = mongoose.Schema({
   subject: { type: String, required: true },
   body: { type: String, required: true },
   category: { type: String, required: true },
-  created_by: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  loc: {
+  created_by: {type: String, required: true},
+  detected_loc: {
+    type: { type: String },
+    coordinates: []
+  },
+  provided_loc: {
     type: { type: String },
     coordinates: []
   }
@@ -17,7 +22,8 @@ const itemSchema = mongoose.Schema({
   }
 });
 
-itemSchema.index({ "loc": "2dsphere" });
+itemSchema.index({ "detected_loc": "2dsphere" });
+itemSchema.index({ "provided_loc": "2dsphere" });
 
 
 module.exports = mongoose.model('Item', itemSchema);

@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { ItemsService } from './../../services/items.service';
 import { LocationService } from '../../services/location.service';
+import { UserLocation } from './../../models/user-location.model';
 
 @Component({
   selector: 'app-create-item',
@@ -10,38 +12,48 @@ import { LocationService } from '../../services/location.service';
 })
 export class CreateItemComponent implements OnInit {
   isChecked = false;
-  currLat = null;
-  currLong = null;
   isCurrLocAdded = false;
   isLoading = true;
+  private detectedLocation: UserLocation = null;
+  form: FormGroup;
+
 
   constructor(private locService: LocationService, private itemService: ItemsService) {
+    // get current location using location service
     this.locService.getCurrentLocation()
-    .then(loc => {
+    .then( loc => {
+      this.detectedLocation = loc;
       this.isCurrLocAdded = true;
       this.isLoading = false;
-      this.currLat = loc.lat;
-      this.currLong = loc.lng;
-
-      console.log('Current Location: ' + this.currLat + ' ' + this.currLong);
-
     })
-    .catch(err => {
-      console.log(err.code);
+    .catch (err =>  {
+      console.log('could not get current location!');
+
       this.isCurrLocAdded = false;
       this.isLoading = false;
     });
   }
   ngOnInit(): void {
-
+    this.form = new FormGroup({
+      subject: new FormControl(null, {validators: [Validators.required, Validators.minLength(3)]}),
+      item_body: new FormControl(null, {validators: [Validators.required, Validators.minLength(3)]}),
+    });
   }
 
   onCreateItem() {
-    this.itemService.getAddressFromLatLong(this.currLat, this.currLong).subscribe(result => {
-      console.log(result.address.city);
+    if (!this.form.valid) {
+      return;
+    }
+    const providedLocation = this.locService.getProvidedLocation(); // get provided location
+    // if detected and provided locations are set
+    if (this.detectedLocation && providedLocation) {
+      const category = this.isChecked ? 'B' : 'A';
+      this.itemService.createItem(this.form.value.subject, this.form.value.item_body, category, this.detectedLocation, providedLocation);
 
-    });
-    // this.itemService.createItem();
+    } else {
+      console.log('provided location is not set!');
+
+    }
   }
 
 }

@@ -8,7 +8,7 @@ module.exports = (req, res, next) => {
                                                                          //and the execution will go to the catch block.
     //const authToken = jwt.verify(token, process.env.JWT_KEY);
     req.userData = {
-      email: authToken.email, userId: authToken.userId
+      username: authToken.username, userId: authToken.userId
     }
     next(); // call next if token is verfied. (no error thrown)
   }
