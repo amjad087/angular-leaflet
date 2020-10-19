@@ -13,7 +13,8 @@ const itemSchema = mongoose.Schema({
   provided_loc: {
     type: { type: String },
     coordinates: []
-  }
+  },
+  location: {type: String, required: true}
 },
 {
   timestamps:

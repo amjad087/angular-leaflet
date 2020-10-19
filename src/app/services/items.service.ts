@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Subject, Observable, forkJoin } from 'rxjs';
@@ -18,7 +19,8 @@ export class ItemsService {
   itemsUpdated = new Subject<{items: Item[]}>(); // will be emited on items change
   constructor(
     private http: HttpClient,
-    private locService: LocationService
+    private locService: LocationService,
+    private router: Router
   ) { }
 
   // chained observables (first get all items with location coordinates,
@@ -34,6 +36,7 @@ export class ItemsService {
             return this.locService.getAddressFromLatLong(item.provided_loc.coordinates[0], item.provided_loc.coordinates[1])
               .pipe(
                 map((res: any) => {
+                  console.log(res.address);
                   item.location = res.address.city ? res.address.city : res.address.county;
                   return item;
                 })
@@ -44,7 +47,42 @@ export class ItemsService {
     );
   }
 
+  // ------------------------------------------------------------------------
+  // Get all items from the server (mongo db)
   getItems() {
+   this.http.get<{message: string, items: any}>(this.apiUrl)
+   .pipe(
+      map(itemsData => {
+        return {
+          items: itemsData.items.map(item => {
+            return {
+              subject: item.subject,
+              body: item.body,
+              created_by: item.created_by,
+              created_at: item.created_at,
+              detected_loc: {
+                lat: item.detected_loc.coordinates[1], // lat is on 1 index (in DB)
+                lng: item.detected_loc.coordinates[0], // lng is on 0 index (in DB)
+              },
+              provided_loc: {
+                lat: item.provided_loc.coordinates[1], // lat is on 1 index (in DB)
+                lng: item.provided_loc.coordinates[0]  // lng is on 1 index (in DB)
+              },
+              category: item.category,
+              location: item.location
+            };
+          })
+        };
+      }),
+    )
+    .subscribe((transoformedItems) => {
+      this.items = transoformedItems.items;
+      this.itemsUpdated.next({items: [...this.items]}); // notify subscribers
+    }, error => {
+      console.log(error);
+    });
+
+   /*
     this.getTransformedItems()
     .subscribe((transformedItems: any) => {
       // map items data, as coordinates are saved in db as [lng, lat]
@@ -72,13 +110,16 @@ export class ItemsService {
     }, error => {
       console.log(error);
     });
+    */
   }
 
+  // ------------------------------------------------------------------------
   // Create new item (send to the server to store in DB)
-  createItem(subject: string, body: string, category: string, detectedLoc: UserLocation, providedLoc: UserLocation) {
-    const item = { subject, body, category, detectedLoc, providedLoc };
+  createItem(subject: string, body: string, category: string, detectedLoc: UserLocation, providedLoc: UserLocation, location: string) {
+    const item = { subject, body, category, detectedLoc, providedLoc, location };
+      // send to server with location name
     this.http.post(this.apiUrl + 'create', item).subscribe(res => {
-      console.log(res);
+      this.router.navigate(['/']); // navigate to home page
     }, error => {
       console.log(error);
     });

@@ -36,6 +36,8 @@ export class LocationService {
         resolve({lat: res.coords.latitude, lng: res.coords.longitude});
       },
       err => {
+        console.log(err);
+
         reject(err);
       });
     });

@@ -20,7 +20,8 @@ exports.createItem = (req, res, next) => {
     "provided_loc": {
       "type": "Point",
       "coordinates": providedLoc
-    }
+    },
+    location: req.body.location
   });
 
   item.save()

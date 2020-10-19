@@ -66,9 +66,9 @@ export class MapComponent implements OnInit, OnDestroy {
     .then(loc => {
       this.detectedLocation = loc;
       // initialise provided location to detected location (in location service) if not already set
-      if (!this.locService.getProvidedLocation()) {
-        this.locService.setProvidedLocation(loc.lat, loc.lng);
-      }
+      // if (!this.locService.getProvidedLocation()) {
+      this.locService.setProvidedLocation(loc.lat, loc.lng);
+      // }
 
       this.providedLocation = this.locService.getProvidedLocation(); // for marker
       this.mapLoaded = true;
@@ -95,6 +95,7 @@ export class MapComponent implements OnInit, OnDestroy {
       tiles.addTo(this.map);
 
       // draggable marker for provided location
+      L.Marker.prototype.options.icon = iconDefault;
       const marker = new L.marker([this.providedLocation.lat, this.providedLocation.lng], {draggable: 'true'});
       marker.on('dragend', event => {
         const position = event.target.getLatLng();
