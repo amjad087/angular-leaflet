@@ -38,9 +38,21 @@ export class CreateItemComponent implements OnInit {
         this.locService.setProvidedLocation(loc.lat, loc.lng);
       }
       this.providedLocation = this.locService.getProvidedLocation();
+      // get location address
       this.locService.getAddressFromLatLong(this.providedLocation.lng, this.providedLocation.lat)
       .subscribe(res => {
-        this.location = res.address.city ? res.address.city : res.address.couty;
+        console.log(res.address);
+        this.location = 'Address not found';
+        if (res.address.city) {
+          this.location = res.address.city;
+        } else if (res.address.county) {
+          this.location = res.address.county;
+        } else if (res.address.region) {
+          this.location = res.address.region;
+        } else if (res.address.state) {
+          this.location = res.address.state;
+        }
+        // this.location = res.address.city ? res.address.city : res.address.county;
         this.isCurrLocAdded = true;
         this.isLoading = false;
 
@@ -67,6 +79,8 @@ export class CreateItemComponent implements OnInit {
     if (!this.form.valid) {
       return;
     }
+    console.log(this.detectedLocation, this.providedLocation, this.location);
+
     // if detected and provided locations are set
     if (this.detectedLocation && this.providedLocation && this.location) {
       const category = this.isChecked ? 'B' : 'A';

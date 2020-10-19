@@ -1,0 +1,11 @@
+mat-spinner {
+  margin: auto;
+}
+
+.items {
+  display: block;
+  width: 80%;
+  margin: auto;
+  height: 100%;
+  overflow: auto;
+}

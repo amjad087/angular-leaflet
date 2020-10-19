@@ -1,5 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component, OnInit, Input } from '@angular/core';
 
 import { Item } from './../../models/item.model';
 
@@ -9,8 +8,8 @@ import { Item } from './../../models/item.model';
   styleUrls: ['./marker-dialog.component.css']
 })
 export class MarkerDialogComponent implements OnInit {
-
-  constructor(@Inject(MAT_DIALOG_DATA) public data: { item: Item }) { }
+  @Input() data;
+  constructor() { }
 
   ngOnInit(): void {
   }

@@ -1,0 +1,24 @@
+<mat-spinner *ngIf="loading"></mat-spinner>
+<mat-accordion multi="true" *ngIf="items.length > 0 && !loading">
+  <mat-expansion-panel *ngFor="let item of items">
+    <mat-expansion-panel-header> {{ item.subject }}</mat-expansion-panel-header>
+    <p>{{ item.body }}</p>
+    <p> {{ item.location }}</p>
+    <p> {{ item.category }}</p>
+    <!-- <mat-action-row>
+      <a
+        mat-button
+        color="primary"
+        [routerLink] = "['/edit', item.id]"
+        *ngIf="isUserAuthenticated() && userId === item.creator"
+      >EDIT</a>
+      <button
+        type="button"
+        mat-button
+        color="warn"
+        (click) = "onDelete(item.id)"
+        *ngIf="isUserAuthenticated() && userId === item.creator"
+      >DELETE</button>
+    </mat-action-row> -->
+  </mat-expansion-panel>
+</mat-accordion>

@@ -5,7 +5,7 @@
   <div class="side-item" *ngFor="let item of items">
     <div class="side-inner-item">
       <h3>{{item.created_by}}</h3>
-      <h3>{{item.location}}</h3>
+      <h3><span><mat-icon>location_on</mat-icon></span>{{item.location}}</h3>
     </div>
     <div class="side-inner-item">
       <h3>[{{item.subject}}]</h3>

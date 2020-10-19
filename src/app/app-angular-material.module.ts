@@ -8,6 +8,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   declarations: [],
@@ -20,7 +21,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatSlideToggleModule,
     MatDividerModule,
     MatProgressSpinnerModule,
-    MatDialogModule
+    MatDialogModule,
+    MatExpansionModule
   ]
 })
 export class AppAngularMaterialModule { }

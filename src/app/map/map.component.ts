@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import * as L from 'leaflet';
 
@@ -9,37 +9,12 @@ import { ItemsService } from '../services/items.service';
 import { MarkerService } from './../services/marker.service';
 import { Subscription } from 'rxjs';
 
-// for known issue of leaflet icon images not showing correctly,
-// you have to provide it manually
-const iconUrl = 'assets/marker-icon.png';
-const shadowUrl = 'assets/marker-shadow.png';
-const iconDefault = L.icon({
-  iconUrl,
-  shadowUrl,
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  tooltipAnchor: [16, -28],
-  shadowSize: [41, 41]
-});
-
-
-const greenIcon = new L.Icon({
-  iconUrl: 'assets/marker-icon-2x-green.png',
-  shadowUrl: 'assets/marker-shadow.png',
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41]
-});
-
-L.Marker.prototype.options.icon = iconDefault;
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css']
 })
-export class MapComponent implements OnInit, OnDestroy {
+export class MapComponent implements AfterViewInit, OnDestroy {
   private map: any;
   items: Item[] = null;
   itemsSub: Subscription;
@@ -54,9 +29,8 @@ export class MapComponent implements OnInit, OnDestroy {
     private router: Router
   ) { }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
 
-    this.getItems();
     this.initMap();
   }
 
@@ -95,13 +69,15 @@ export class MapComponent implements OnInit, OnDestroy {
       tiles.addTo(this.map);
 
       // draggable marker for provided location
-      L.Marker.prototype.options.icon = iconDefault;
+      L.Marker.prototype.options.icon = this.markerService.iconDefault;
       const marker = new L.marker([this.providedLocation.lat, this.providedLocation.lng], {draggable: 'true'});
       marker.on('dragend', event => {
         const position = event.target.getLatLng();
         this.locService.setProvidedLocation(position.lat, position.lng);
       });
       this.map.addLayer(marker);
+
+      this.getItems();
     })
     .catch(err => {
       this.mapLoaded = false;
@@ -118,17 +94,7 @@ export class MapComponent implements OnInit, OnDestroy {
     this.itemsService.getItems();
     this.itemsSub = this.itemsService.itemsUpdated.subscribe((itemsData: {items: Item[]}) => {
       this.items = itemsData.items;
-
-      // adding markers for each item
-      L.Marker.prototype.options.icon = greenIcon; // change marker icon
-      for (const item of this.items) {
-        const marker = new L.marker([item.provided_loc.lat, item.provided_loc.lng]);
-        marker.on('click', event => {
-          const position = event.target.getLatLng();
-          this.markerService.openToolTipDialog(item, position);
-        });
-        marker.addTo(this.map);
-      }
+      this.markerService.makeItemMarkers(this.items, this.map);
     });
   }
 
