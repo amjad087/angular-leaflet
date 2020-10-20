@@ -49,26 +49,27 @@ export class ItemsService {
 
   // ------------------------------------------------------------------------
   // Get all items from the server (mongo db)
-  getItems() {
-   this.http.get<{message: string, items: any}>(this.apiUrl)
+  getItems(category: string) {
+    const apiUrl = this.apiUrl + category;
+    this.http.get<{message: string, items: any}>(apiUrl)
    .pipe(
       map(itemsData => {
         return {
           items: itemsData.items.map(item => {
-            const currDate = new Date();
+            // const currDate = new Date();
             const itemDate = new Date(item.created_at);
-            console.log('Item Date: '  , itemDate);
-            console.log('Curr Date: '  , currDate);
+            // console.log('Item Date: '  , itemDate);
+            // console.log('Curr Date: '  , currDate);
 
-            const diffInMiliSec = currDate.getTime() - itemDate.getTime();
-            let diffInMin = diffInMiliSec / 60000;
-            diffInMin = Math.abs(Math.round(diffInMin));
+            // const diffInMiliSec = currDate.getTime() - itemDate.getTime();
+            // let diffInMin = diffInMiliSec / 60000;
+            // diffInMin = Math.abs(Math.round(diffInMin));
 
             return {
               subject: item.subject,
               body: item.body,
               created_by: item.created_by,
-              created_at: diffInMin,
+              created_at: itemDate,
               detected_loc: {
                 lat: item.detected_loc.coordinates[1], // lat is on 1 index (in DB)
                 lng: item.detected_loc.coordinates[0], // lng is on 0 index (in DB)

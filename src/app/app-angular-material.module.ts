@@ -9,6 +9,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
+import {MatSliderModule} from '@angular/material/slider';
 
 @NgModule({
   declarations: [],
@@ -22,7 +23,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatDividerModule,
     MatProgressSpinnerModule,
     MatDialogModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatSliderModule
   ]
 })
 export class AppAngularMaterialModule { }

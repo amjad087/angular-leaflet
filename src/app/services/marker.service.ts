@@ -33,6 +33,11 @@ export class Marker {
   ) {}
 }
 
+interface MarkerMetaData {
+  markerInstance: L.Marker;
+  componentInstance: ComponentRef<MarkerDialogComponent>;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -46,6 +51,8 @@ export class MarkerService {
     tooltipAnchor: [16, -28],
     shadowSize: [41, 41]
   });
+
+  markers: MarkerMetaData[] = [];
 
   componentInstance: ComponentRef<MarkerDialogComponent>;
 
@@ -86,6 +93,22 @@ export class MarkerService {
 
       // finally add the marker to the map s.t. it is visible
       m.addTo(map);
+      // add a metadata object into a local array which helps us
+      // keep track of the instantiated markers for removing/disposing them later
+      this.markers.push({
+        markerInstance: m,
+        componentInstance: component
+      });
+    }
+  }
+
+  removeMarkers(map: L.map) {
+
+    for (let i = this.markers.length; i--;) {
+      const marker = this.markers[i];
+      marker.markerInstance.removeFrom(map);
+      marker.componentInstance.destroy();
+      this.markers.splice(i, 1);
     }
   }
 }

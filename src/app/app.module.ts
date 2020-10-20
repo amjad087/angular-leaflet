@@ -18,6 +18,7 @@ import { ErrorDialogComponent } from './error-dialog/error-dialog.component';
 import { MarkerDialogComponent } from './map/marker-dialog/marker-dialog.component';
 import { ProfileComponent } from './profile/profile.component';
 import { NotificationComponent } from './notification/notification.component';
+import { DateAgoPipe } from './pipes/date-ago.pipe';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { NotificationComponent } from './notification/notification.component';
     ErrorDialogComponent,
     MarkerDialogComponent,
     ProfileComponent,
-    NotificationComponent
+    NotificationComponent,
+    DateAgoPipe
   ],
   imports: [
     BrowserModule,

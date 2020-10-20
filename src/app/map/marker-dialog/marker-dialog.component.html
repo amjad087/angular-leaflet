@@ -1,8 +1,14 @@
 <h2>{{ data.subject }}</h2>
-<h4> Category: {{data.category}} </h4>
 <p>
   {{ data.body }}
 </p>
-<p>
-  <span><mat-icon>location_on</mat-icon></span>{{ data.location }}
-</p>
+<div class="flex-box">
+  <div>
+    <mat-icon>location_on</mat-icon><span>{{ data.location }}</span>
+  </div>
+  <p>&nbsp;</p>
+  <div>
+    Category: {{data.category}}
+  </div>
+</div>
+

@@ -3,7 +3,7 @@ export interface Item {
   subject: string;
   body: string;
   created_by: string;
-  created_at: string;
+  created_at: Date;
   detected_loc: UserLocation;
   provided_loc: UserLocation;
   location?: string;

@@ -41,7 +41,7 @@ exports.createItem = (req, res, next) => {
 }
 
 exports.getItems = (req, res, next) => {
-  Item.find().then(items => {
+  Item.find({ 'category': req.params.category}).then(items => {
     res.status(201).json({
       message: 'Items got successfully',
       items: items

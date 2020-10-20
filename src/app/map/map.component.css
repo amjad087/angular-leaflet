@@ -14,7 +14,7 @@ mat-spinner {
   align-items: flex-start;
   overflow: auto;
   margin-top: 5px;
-  height: 100%;
+  height: 89%;
 }
 .map-container {
   position: absolute;
@@ -40,7 +40,7 @@ mat-spinner {
 }
 
 .top-overlay {
-  position: absolute;
+  position: relative;
   margin: 10px;
   z-index: 1001;
   display: flex;
@@ -51,7 +51,7 @@ mat-spinner {
 }
 
 ::ng-deep .mat-slide-toggle:not(.mat-disabled) .mat-slide-toggle-bar {
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: rgba(0, 0, 0, 0.6);
 }
 
 ::ng-deep .mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-thumb {

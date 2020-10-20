@@ -16,7 +16,8 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.loading = true;
-    this.itemService.getItems();
+    const category = 'A';
+    this.itemService.getItems(category);
     this.itemService.itemsUpdated.subscribe((itemsData: {items: Item[]}) => {
       this.loading = false;
       this.items = itemsData.items;

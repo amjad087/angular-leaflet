@@ -8,6 +8,7 @@ import { LocationService } from '../services/location.service';
 import { ItemsService } from '../services/items.service';
 import { MarkerService } from './../services/marker.service';
 import { Subscription } from 'rxjs';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-map',
@@ -92,12 +93,19 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   getItems() {
-    this.itemsService.getItems();
+    this.markerService.removeMarkers(this.map);
+    const category = this.isChecked ? 'B' : 'A';
+    this.itemsService.getItems(category);
     this.itemsSub = this.itemsService.itemsUpdated.subscribe((itemsData: {items: Item[]}) => {
       this.items = itemsData.items;
       this.markerService.makeItemMarkers(this.items, this.map);
     });
   }
+
+  public onSlideToggle(event: MatSlideToggleChange) {
+    this.isChecked = event.checked;
+    this.getItems();
+}
 
   ngOnDestroy() {
     if (this.itemsSub) {
