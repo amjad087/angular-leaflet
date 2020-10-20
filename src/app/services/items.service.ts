@@ -55,11 +55,20 @@ export class ItemsService {
       map(itemsData => {
         return {
           items: itemsData.items.map(item => {
+            const currDate = new Date();
+            const itemDate = new Date(item.created_at);
+            console.log('Item Date: '  , itemDate);
+            console.log('Curr Date: '  , currDate);
+
+            const diffInMiliSec = currDate.getTime() - itemDate.getTime();
+            let diffInMin = diffInMiliSec / 60000;
+            diffInMin = Math.abs(Math.round(diffInMin));
+
             return {
               subject: item.subject,
               body: item.body,
               created_by: item.created_by,
-              created_at: item.created_at,
+              created_at: diffInMin,
               detected_loc: {
                 lat: item.detected_loc.coordinates[1], // lat is on 1 index (in DB)
                 lng: item.detected_loc.coordinates[0], // lng is on 0 index (in DB)
@@ -69,7 +78,8 @@ export class ItemsService {
                 lng: item.provided_loc.coordinates[0]  // lng is on 1 index (in DB)
               },
               category: item.category,
-              location: item.location
+              location: item.location,
+
             };
           })
         };

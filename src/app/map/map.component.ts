@@ -22,6 +22,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   providedLocation: UserLocation = null; // user can change / provide location
   mapLoaded = false;
   isLoading = true;
+  isChecked = false;
   constructor(
     private locService: LocationService,
     private itemsService: ItemsService,

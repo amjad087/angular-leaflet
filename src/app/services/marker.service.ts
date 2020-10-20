@@ -29,6 +29,7 @@ export class Marker {
     private body: string,
     private position: L.LatLngExpression,
     private location: string,
+    private category: string
   ) {}
 }
 
@@ -61,7 +62,7 @@ export class MarkerService {
     for (const item of items) {
       const lat = item.provided_loc.lat;
       const lng = item.provided_loc.lng;
-      const marker = new Marker(item.subject, item.body, item.provided_loc, item.location);
+      const marker = new Marker(item.subject, item.body, item.provided_loc, item.location, item.category);
 
       const factory = this.resolver.resolveComponentFactory(MarkerDialogComponent);
 

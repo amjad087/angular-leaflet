@@ -33,6 +33,35 @@ mat-spinner {
   margin: 10px;
 }
 
+.add_slid_toggle {
+  position: relative;
+  z-index: 2001; /* leaflet map uses z-index of 1000, to make something on top of the map, it must be >= 1001 */
+  margin: 0 10px;
+}
+
+.top-overlay {
+  position: absolute;
+  margin: 10px;
+  z-index: 1001;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+
+}
+
+::ng-deep .mat-slide-toggle:not(.mat-disabled) .mat-slide-toggle-bar {
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+::ng-deep .mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-thumb {
+  background-color: #ff4081;
+}
+
+::ng-deep .mat-slide-toggle:not(.mat-disabled) .mat-slide-toggle-thumb {
+  background-color: #3f51b5;
+}
+
 .map-frame {
   height: 100%;
 }
