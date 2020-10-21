@@ -95,7 +95,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   getItems() {
     this.markerService.removeMarkers(this.map);
     const category = this.isChecked ? 'B' : 'A';
-    this.itemsService.getItems(category);
+    this.itemsService.getCategoryItems(category);
     this.itemsSub = this.itemsService.itemsUpdated.subscribe((itemsData: {items: Item[]}) => {
       this.items = itemsData.items;
       this.markerService.makeItemMarkers(this.items, this.map);

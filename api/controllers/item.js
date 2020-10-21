@@ -40,8 +40,9 @@ exports.createItem = (req, res, next) => {
     });
 }
 
-exports.getItems = (req, res, next) => {
-  Item.find({ 'category': req.params.category}).then(items => {
+// get items based on category (A, B)
+exports.getCategoryItems = (req, res, next) => {
+  Item.find({ 'category': req.params.category, 'created_by': req.userData.username }).then(items => {
     res.status(201).json({
       message: 'Items got successfully',
       items: items
@@ -54,3 +55,21 @@ exports.getItems = (req, res, next) => {
     });
   })
 }
+
+// get all items regardless of category
+exports.getAllItems = (req, res, next) => {
+  Item.find({ 'created_by': req.userData.username}).then(items => {
+    res.status(201).json({
+      message: 'Items got successfully',
+      items: items
+    })
+  })
+  .catch(err => {
+    console.log(err);
+    res.status(500).json({
+      message: 'Could not get items!'
+    });
+  })
+}
+
+

@@ -49,6 +49,9 @@ mat-spinner {
   align-items: center;
 
 }
+.mat-icon {
+  vertical-align: middle;
+}
 
 ::ng-deep .mat-slide-toggle:not(.mat-disabled) .mat-slide-toggle-bar {
   background-color: rgba(0, 0, 0, 0.6);

@@ -7,5 +7,7 @@ const checkAuth = require('../middleware/check-auth');
 const itemController = require('../controllers/item');
 
 router.post('/create', checkAuth, itemController.createItem);
-router.get('/:category', checkAuth, itemController.getItems);
+router.get('', checkAuth, itemController.getAllItems);
+router.get('/:category', checkAuth, itemController.getCategoryItems);
+
 module.exports = router;
