@@ -37,6 +37,14 @@ export class ItemsService {
     this.getItemsFromServer(apiUrl);
   }
 
+  getOldestItem() {
+    const apiUrl = this.apiUrl + 'oldest-item';
+    this.http.get<{message: string, items: any}>(apiUrl).subscribe(res => {
+      console.log(res);
+    });
+
+  }
+
   // ------------------------------------------------------------------------
   // Get items from the server
   getItemsFromServer(apiUrl) {

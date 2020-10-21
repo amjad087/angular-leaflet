@@ -40,9 +40,25 @@ exports.createItem = (req, res, next) => {
     });
 }
 
+exports.getOldestItem = (req, res, next) => {
+  console.log('get oldest item');
+  Item.find({ 'created_by': req.userData.username}).sort({created_at:1}).limit(1).then(items => {
+    res.status(201).json({
+      message: 'Items got successfully',
+      created_at: items
+    })
+  })
+  .catch(err => {
+    console.log(err);
+    res.status(500).json({
+      message: 'Could not get items!'
+    });
+  });
+}
+
 // get items based on category (A, B)
 exports.getCategoryItems = (req, res, next) => {
-  Item.find({ 'category': req.params.category, 'created_by': req.userData.username }).then(items => {
+  Item.find({ 'category': req.params.category, 'created_by': req.userData.username }).sort({created_at:-1}).then(items => {
     res.status(201).json({
       message: 'Items got successfully',
       items: items

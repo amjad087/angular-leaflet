@@ -32,7 +32,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   ) { }
 
   ngAfterViewInit(): void {
-
+    this.itemsService.getOldestItem();
     this.initMap();
   }
 
@@ -105,7 +105,18 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   public onSlideToggle(event: MatSlideToggleChange) {
     this.isChecked = event.checked;
     this.getItems();
-}
+  }
+
+  // set map dragging to false when mouse enters the slider div,
+  // otherwise map also gets dragged with slider
+  DisableMapDragging() {
+    this.map.dragging.disable();
+  }
+
+  // enabling map dragging when mouse leaves the slider div
+  EnableMapDragging() {
+    this.map.dragging.enable();
+  }
 
   ngOnDestroy() {
     if (this.itemsSub) {
