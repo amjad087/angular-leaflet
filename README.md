@@ -41,6 +41,6 @@ git clone https://github.com/amjad087/angular-leaflet.git
 	- npm install
 	- ng serve -o
 
-Note: the back must be running before running the frontend
+Note: the back-end must be running before running the frontend
 
 
