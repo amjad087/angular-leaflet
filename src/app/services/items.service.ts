@@ -27,28 +27,33 @@ export class ItemsService {
   // Get all items regardless of the category (for profile page)
   getAllItems() {
     const apiUrl = this.apiUrl;
-    this.getItemsFromServer(apiUrl);
+    const config = null;
+    this.getItemsFromServer(apiUrl, config);
   }
 
   // ------------------------------------------------------------------------
   // Get all items based on category (A, B) for map page
-  getCategoryItems(category: string) {
-    const apiUrl = this.apiUrl + category;
-    this.getItemsFromServer(apiUrl);
+  getCategoryItems(category: string, itemsDate: Date) {
+    const config = { category, itemsDate };
+    const apiUrl = this.apiUrl + 'category';
+    this.getItemsFromServer(apiUrl, config);
   }
 
-  getOldestItem() {
-    const apiUrl = this.apiUrl + 'oldest-item';
-    this.http.get<{message: string, items: any}>(apiUrl).subscribe(res => {
-      console.log(res);
-    });
+  getOldestItem(category: string) {
+    const apiUrl = this.apiUrl + 'oldest-item/' + category;
+    return this.http.get<{message: string, items: any}>(apiUrl);
 
   }
 
   // ------------------------------------------------------------------------
   // Get items from the server
-  getItemsFromServer(apiUrl) {
-    this.http.get<{message: string, items: any}>(apiUrl)
+  getItemsFromServer(apiUrl, config) {
+    let params = new HttpParams();
+    if (config) {
+      params = params.append('category', config.category);
+      params = params.append('itemsDate', config.itemsDate);
+    }
+    this.http.get<{message: string, items: any}>(apiUrl, {params})
    .pipe(
       map(itemsData => {
         return {

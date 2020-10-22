@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import {coerceNumberProperty} from '@angular/cdk/coercion';
 import { Router } from '@angular/router';
 import * as L from 'leaflet';
 
@@ -15,7 +16,7 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css']
 })
-export class MapComponent implements AfterViewInit, OnDestroy {
+export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   private map: any;
   items: Item[] = null;
   itemsSub: Subscription;
@@ -24,6 +25,18 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   mapLoaded = false;
   isLoading = true;
   isChecked = false;
+  autoTicks = true;
+  disabled = false;
+  invert = true;
+  max = 100;
+  min = 0;
+  showTicks = true;
+  step = 1;
+  thumbLabel = true;
+  value = 0;
+  vertical = false;
+  sliderStepsIn = 'minutes'; // will track of slider steps(whether they are in months, days, hours or minutes)
+
   constructor(
     private locService: LocationService,
     private itemsService: ItemsService,
@@ -31,9 +44,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     private router: Router
   ) { }
 
+  ngOnInit() {
+
+  }
+
   ngAfterViewInit(): void {
-    this.itemsService.getOldestItem();
-    this.initMap();
+    this.setSlider();
   }
 
   private initMap() {
@@ -87,15 +103,61 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     });
   }
 
+  private setSlider() {
+    const category = this.isChecked ? 'B' : 'A';
+    this.itemsService.getOldestItem(category).subscribe(res => {
+      if (res.items.length > 0) {
+        const item = res.items[0];
+        const itemDate = new Date(item.created_at);
+        const currDate = new Date();
+        const difference = currDate.getTime() - itemDate.getTime(); // This will give difference in milliseconds
+        const resultInMinutes = Math.round(difference / 60000);
+
+        /*
+        const minutesInYear = 525600;
+        const minutesInMonth = 43800;
+        const minutesInDay = 1440;
+        const minutesInHour = 60;
+        if (resultInMinutes >= minutesInYear) {
+          this.max =  Math.round(resultInMinutes / minutesInMonth);
+          this.sliderStepsIn = 'months';
+        } else if (resultInMinutes >= minutesInMonth) {
+          this.max =  Math.round(resultInMinutes / minutesInDay);
+          this.sliderStepsIn = 'days';
+        } else if (resultInMinutes >= minutesInDay) {
+          this.max =  Math.round(resultInMinutes / minutesInHour);
+          this.sliderStepsIn = 'hours';
+        } else {
+          this.max = resultInMinutes;
+          this.sliderStepsIn = 'minutes';
+          if (this.max > 30) {
+            this.value = 30;
+          }
+        }
+        */
+        this.max = resultInMinutes;
+        if (this.max > 30) {
+          this.value = 30;
+        }
+        this.initMap();
+      }
+    }, err => {
+      this.initMap();
+    });
+
+  }
   // on creating new item event
   onCreateItem() {
     this.router.navigate(['/create-item']); // navigate to create item page
   }
 
   getItems() {
+    const currDate = new Date();
+    const itemsDate = this.addMinutes(currDate, this.value);
+
     this.markerService.removeMarkers(this.map);
     const category = this.isChecked ? 'B' : 'A';
-    this.itemsService.getCategoryItems(category);
+    this.itemsService.getCategoryItems(category, itemsDate);
     this.itemsSub = this.itemsService.itemsUpdated.subscribe((itemsData: {items: Item[]}) => {
       this.items = itemsData.items;
       this.markerService.makeItemMarkers(this.items, this.map);
@@ -116,6 +178,42 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   // enabling map dragging when mouse leaves the slider div
   EnableMapDragging() {
     this.map.dragging.enable();
+  }
+
+  onSliderChange(event: any) {
+    console.log(this.value);
+    this.getItems();
+  }
+
+  get tickInterval(): number | 'auto' {
+    return this.showTicks ? (this.autoTicks ? 'auto' : this._tickInterval) : 0;
+  }
+  set tickInterval(value) {
+    this._tickInterval = coerceNumberProperty(value);
+  }
+  private _tickInterval = 1;
+
+  addMinutes(date, minutes) {
+
+    const minute = 1;
+    const miliSecInMin = 60000;
+    const calcMinutes = minute;
+    /*
+    const minutesInYear = 525600;
+    const minutesInMonth = 43800;
+    const minutesInDay = 1440;
+    const minutesInHour = 60;
+
+    if (this.sliderStepsIn === 'months') {
+      calcMinutes = minutesInYear;
+    } else if (this.sliderStepsIn === 'days') {
+      calcMinutes = minutesInDay;
+    } else if (this.sliderStepsIn === 'hours') {
+      calcMinutes = minutesInHour;
+    }*/
+
+    const calcMiliSecs = calcMinutes * miliSecInMin;
+    return new Date(date.getTime() - (minutes * calcMiliSecs));
   }
 
   ngOnDestroy() {

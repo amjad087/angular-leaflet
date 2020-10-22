@@ -41,7 +41,6 @@ export class CreateItemComponent implements OnInit {
       // get location address
       this.locService.getAddressFromLatLong(this.providedLocation.lng, this.providedLocation.lat)
       .subscribe(res => {
-        console.log(res.address);
         this.location = 'Address not found';
         if (res.address.city) {
           this.location = res.address.city;
@@ -79,8 +78,6 @@ export class CreateItemComponent implements OnInit {
     if (!this.form.valid) {
       return;
     }
-    console.log(this.detectedLocation, this.providedLocation, this.location);
-
     // if detected and provided locations are set
     if (this.detectedLocation && this.providedLocation && this.location) {
       const category = this.isChecked ? 'B' : 'A';

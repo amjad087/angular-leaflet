@@ -1,3 +1,4 @@
+const item = require('../models/item');
 const Item = require('../models/item');
 
 exports.createItem = (req, res, next) => {
@@ -41,11 +42,10 @@ exports.createItem = (req, res, next) => {
 }
 
 exports.getOldestItem = (req, res, next) => {
-  console.log('get oldest item');
-  Item.find({ 'created_by': req.userData.username}).sort({created_at:1}).limit(1).then(items => {
+  Item.find({'category': req.params.category, 'created_by': req.userData.username}).sort({created_at:1}).limit(1).then(items => {
     res.status(201).json({
       message: 'Items got successfully',
-      created_at: items
+      items: items
     })
   })
   .catch(err => {
@@ -58,10 +58,21 @@ exports.getOldestItem = (req, res, next) => {
 
 // get items based on category (A, B)
 exports.getCategoryItems = (req, res, next) => {
-  Item.find({ 'category': req.params.category, 'created_by': req.userData.username }).sort({created_at:-1}).then(items => {
+
+  Item.find({ 'category': req.query.category, 'created_by': req.userData.username }).sort({created_at:-1}).then(items => {
+
+    let newItems = [];
+    for (let item of items) {
+      let itemDate = new Date(req.query.itemsDate);
+      const itemUtcDate = new Date(itemDate.getUTCFullYear(), itemDate.getUTCMonth(), itemDate.getUTCDate(),  itemDate.getUTCHours(), itemDate.getUTCMinutes(), itemDate.getUTCSeconds());
+      let createDate = item.created_at;
+      if(createDate.getTime() >= itemUtcDate.getTime()) {
+        newItems.push(item);
+      }
+    }
     res.status(201).json({
       message: 'Items got successfully',
-      items: items
+      items: newItems
     })
   })
   .catch(err => {
