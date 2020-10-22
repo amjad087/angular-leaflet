@@ -1,15 +1,28 @@
+:host {
+  height: 100%;
+}
 mat-spinner {
   margin: auto;
 }
+.items {
+  width: 100%;
+  position: relative;
+  margin-bottom: 20px;
+}
 
+mat-card,
 mat-expansion-panel {
   width: 90%;
   margin: auto;
   margin-bottom: 5px;
 }
 
+.mat-icon {
+  vertical-align: middle;
+}
+
 .flexbox {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
 }

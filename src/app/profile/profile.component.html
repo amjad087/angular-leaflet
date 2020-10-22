@@ -1,26 +1,17 @@
 <mat-spinner *ngIf="loading"></mat-spinner>
-<mat-accordion multi="true" *ngIf="items.length > 0 && !loading">
-  <mat-expansion-panel *ngFor="let item of items">
-    <mat-expansion-panel-header> Subject: {{ item.subject }}</mat-expansion-panel-header>
-    <p>Body: {{item.body}}</p>
-    <div class="flexbox">
-      <h3><mat-icon>location_on</mat-icon>{{item.location}}</h3>
-      <h3>Category: {{item.category}}</h3>
-    </div>
-    <!-- <mat-action-row>
-      <a
-        mat-button
-        color="primary"
-        [routerLink] = "['/edit', item.id]"
-        *ngIf="isUserAuthenticated() && userId === item.creator"
-      >EDIT</a>
-      <button
-        type="button"
-        mat-button
-        color="warn"
-        (click) = "onDelete(item.id)"
-        *ngIf="isUserAuthenticated() && userId === item.creator"
-      >DELETE</button>
-    </mat-action-row> -->
-  </mat-expansion-panel>
-</mat-accordion>
+<div *ngIf="items.length === 0 && !loading">
+  <mat-card>No Item to Display</mat-card>
+</div>
+<div class="items" *ngIf="items.length > 0 && !loading">
+  <mat-accordion multi="true" class="">
+    <mat-expansion-panel *ngFor="let item of items">
+      <mat-expansion-panel-header> Subject: {{ item.subject }}</mat-expansion-panel-header>
+      <p>Body: {{item.body}}</p>
+      <div class="flexbox">
+        <h3><mat-icon>location_on</mat-icon>{{item.location}}</h3>
+        <h3>Category: {{item.category}}</h3>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
+

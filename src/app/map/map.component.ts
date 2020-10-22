@@ -106,13 +106,15 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   private setSlider() {
     const category = this.isChecked ? 'B' : 'A';
     this.itemsService.getOldestItem(category).subscribe(res => {
-      if (res.items.length > 0) {
+     if (res.items.length > 0) {
         const item = res.items[0];
         const itemDate = new Date(item.created_at);
         const currDate = new Date();
         const difference = currDate.getTime() - itemDate.getTime(); // This will give difference in milliseconds
-        const resultInMinutes = Math.round(difference / 60000);
-
+        let resultInMinutes = Math.round(difference / 60000);
+        if (resultInMinutes === 0) {
+          resultInMinutes = 1;
+        }
         /*
         const minutesInYear = 525600;
         const minutesInMonth = 43800;
@@ -138,9 +140,13 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         this.max = resultInMinutes;
         if (this.max > 30) {
           this.value = 30;
+        } else {
+          this.value = resultInMinutes;
         }
-        this.initMap();
+        console.log(this.value);
+
       }
+      this.initMap();
     }, err => {
       this.initMap();
     });

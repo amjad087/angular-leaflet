@@ -71,6 +71,7 @@ mat-spinner {
   justify-content: center;
   top: 80%;
   z-index: 1001;
+  margin-right: 50px;
 }
 
 mat-slider {
