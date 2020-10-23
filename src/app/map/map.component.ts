@@ -38,6 +38,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   value = 0;
   vertical = false;
   sliderStepsIn = 'minutes'; // will track of slider steps(whether they are in months, days, hours or minutes)
+  sliderStepsDate: any;
+  displayText = '1';
 
   constructor(
     private locService: LocationService,
@@ -72,8 +74,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       this.map = L.map('map', {
         center: [ this.detectedLocation.lat, this.detectedLocation.lng ], // center map according to the current location
         zoom: 5, // set initial zoom level
-        zoomControl: false // by default zoom controls are placed on top left corner of the map,
+        zoomControl: false, // by default zoom controls are placed on top left corner of the map,
                            // set it to false initially so that we could place it manually
+        attributionControl: false
       });
 
       // placing zoom controls on bottom right corner of the map (beacuse create item button will be placed on top left corner)
@@ -83,7 +86,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
       // using openstreetmap tiles
       const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19 // setting max zoom level
+        maxZoom: 19, // setting max zoom level
+
       });
 
       tiles.addTo(this.map);
@@ -115,39 +119,15 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         const currDate = new Date();
         const difference = currDate.getTime() - itemDate.getTime(); // This will give difference in milliseconds
         let resultInMinutes = Math.round(difference / 60000);
-        if (resultInMinutes === 0) {
-          resultInMinutes = 1;
-        }
-
-        // commented for now, if you want the slider's step to be in hours, months, and years as well, uncomment this
-        /*
-        const minutesInYear = 525600;
-        const minutesInMonth = 43800;
-        const minutesInDay = 1440;
-        const minutesInHour = 60;
-        if (resultInMinutes >= minutesInYear) {
-          this.max =  Math.round(resultInMinutes / minutesInMonth);
-          this.sliderStepsIn = 'months';
-        } else if (resultInMinutes >= minutesInMonth) {
-          this.max =  Math.round(resultInMinutes / minutesInDay);
-          this.sliderStepsIn = 'days';
-        } else if (resultInMinutes >= minutesInDay) {
-          this.max =  Math.round(resultInMinutes / minutesInHour);
-          this.sliderStepsIn = 'hours';
-        } else {
-          this.max = resultInMinutes;
-          this.sliderStepsIn = 'minutes';
-          if (this.max > 30) {
-            this.value = 30;
-          }
-        }
-        */
+        resultInMinutes += 20; // extra 20 minutes
         this.max = resultInMinutes;
         if (this.max > 30) {
           this.value = 30;
         } else {
           this.value = resultInMinutes;
         }
+        const sliderDate = this.addMinutes(new Date(), this.value);
+        this.sliderStepsDate = sliderDate.toLocaleDateString() + ', ' + sliderDate.toLocaleTimeString();
       }
       this.initMap();
     }, err => {
@@ -191,6 +171,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onSliderChange(event: any) {
     console.log(this.value);
+    const sliderDate = this.addMinutes(new Date(), this.value);
+    this.sliderStepsDate = sliderDate.toLocaleDateString() + ', ' + sliderDate.toLocaleTimeString();
     this.getItems();
   }
 
@@ -208,24 +190,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     const miliSecInMin = 60000;
     const calcMinutes = minute;
 
-    // commented for now, if you want the slider's step to be in hours, months, and years as well, uncomment this
-
-    /*
-    const minutesInYear = 525600;
-    const minutesInMonth = 43800;
-    const minutesInDay = 1440;
-    const minutesInHour = 60;
-
-    if (this.sliderStepsIn === 'months') {
-      calcMinutes = minutesInYear;
-    } else if (this.sliderStepsIn === 'days') {
-      calcMinutes = minutesInDay;
-    } else if (this.sliderStepsIn === 'hours') {
-      calcMinutes = minutesInHour;
-    }*/
-
     const calcMiliSecs = calcMinutes * miliSecInMin;
-    minutes += 20; // plus extra 20 minutes
     return new Date(date.getTime() - (minutes * calcMiliSecs));
   }
 

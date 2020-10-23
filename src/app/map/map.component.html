@@ -33,20 +33,23 @@
         (mouseenter) = "DisableMapDragging()"
         (mouseleave) = "EnableMapDragging()"
       >
-      <mat-slider
-      class="example-margin"
-      [disabled]="disabled"
-      [invert]="invert"
-      [max]="max"
-      [min]="min"
-      [step]="step"
-      [thumbLabel]="thumbLabel"
-      [tickInterval]="tickInterval"
-      [(ngModel)]="value"
-      [vertical]="vertical"
-      (change)="onSliderChange($event)"
-    >
-  </mat-slider>
+        <mat-slider
+          class="example-margin"
+          [disabled]="disabled"
+          [invert]="invert"
+          [max]="max"
+          [min]="min"
+          [step]="step"
+          [thumbLabel]="thumbLabel"
+          [tickInterval]="tickInterval"
+          [(ngModel)]="value"
+          [vertical]="vertical"
+          (change)="onSliderChange($event)"
+        >
+        <!-- <span class="mat-slider-thumb-label-text">{{displayText}}</span> -->
+      </mat-slider>
+
+        <h5 class="slider-date">{{sliderStepsDate}}</h5>
       </div>
     </div>
   </div>
