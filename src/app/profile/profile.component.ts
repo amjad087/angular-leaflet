@@ -11,6 +11,7 @@ import { ItemsService } from './../services/items.service';
 export class ProfileComponent implements OnInit {
   loading = false;
   items: Item[] = [];
+  dateFormat = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
   constructor(private itemService: ItemsService) { }
 
