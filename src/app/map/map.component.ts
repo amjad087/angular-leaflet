@@ -106,7 +106,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   private setSlider() {
     const category = this.isChecked ? 'B' : 'A';
     this.itemsService.getOldestItem(category).subscribe(res => {
-     if (res.items.length > 0) {
+      if (res.items.length > 0) {
         const item = res.items[0];
         const itemDate = new Date(item.created_at);
         const currDate = new Date();
@@ -143,8 +143,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         } else {
           this.value = resultInMinutes;
         }
-        console.log(this.value);
-
       }
       this.initMap();
     }, err => {
@@ -219,6 +217,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     }*/
 
     const calcMiliSecs = calcMinutes * miliSecInMin;
+    minutes += 20; // plus extra 20 minutes
     return new Date(date.getTime() - (minutes * calcMiliSecs));
   }
 

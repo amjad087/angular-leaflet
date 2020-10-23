@@ -1,0 +1,29 @@
+mat-card {
+  width: 80%;
+  margin: auto;
+}
+
+.mat-card {
+  padding: 16px;
+  padding-bottom: 5px !important;
+}
+
+.example-full-width {
+  width: 100%;
+}
+
+mat-spinner {
+  margin: auto;
+}
+
+.create-item {
+  margin-bottom: 20px;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 5px;;
+}
+
+

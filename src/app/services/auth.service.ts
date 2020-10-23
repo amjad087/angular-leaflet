@@ -41,7 +41,6 @@ export class AuthService {
 
     this.http.post(this.apiUrl + 'signup', userData)
     .subscribe(result => {
-      console.log(result);
       this.router.navigate(['/login']); // user signup, redirect to login page
     }, error => {
       console.log(error);
@@ -83,8 +82,6 @@ export class AuthService {
     this.http.post<{loginData: AuthLoginData}>(this.apiUrl + 'login', userData)
     .subscribe(response => {
       if (response.loginData.token) {
-        console.log(response.loginData);
-
         this.token = response.loginData.token;
         this.userId = response.loginData.userId;
         const expDuration = response.loginData.expiresIn;

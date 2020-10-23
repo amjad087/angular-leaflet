@@ -2,9 +2,9 @@ import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { ItemsService } from './../../services/items.service';
+import { ItemsService } from '../../services/items.service';
 import { LocationService } from '../../services/location.service';
-import { UserLocation } from './../../models/user-location.model';
+import { UserLocation } from '../../models/user-location.model';
 
 @Component({
   selector: 'app-create-item',

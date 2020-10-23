@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 
 import { Item } from './../models/item.model';
@@ -13,7 +14,7 @@ export class ProfileComponent implements OnInit {
   items: Item[] = [];
   dateFormat = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
-  constructor(private itemService: ItemsService) { }
+  constructor(private itemService: ItemsService, private router: Router) { }
 
   ngOnInit(): void {
     this.loading = true;
@@ -24,6 +25,10 @@ export class ProfileComponent implements OnInit {
     }, erroe => {
       this.loading = false;
     });
+  }
+
+  onEditItem(itemId: number) {
+    this.router.navigate(['/edit-item', itemId]);
   }
 
 }

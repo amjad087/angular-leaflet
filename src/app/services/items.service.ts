@@ -45,6 +45,11 @@ export class ItemsService {
 
   }
 
+  getItem(itemId: number) {
+    const apiUrl = this.apiUrl + 'item/' + itemId;
+    return this.http.get<{message: string, item: any}>(apiUrl);
+  }
+
   // ------------------------------------------------------------------------
   // Get items from the server
   getItemsFromServer(apiUrl, config) {
@@ -60,6 +65,7 @@ export class ItemsService {
           items: itemsData.items.map(item => {
             const itemDate = new Date(item.created_at);
             return {
+              id: item._id,
               subject: item.subject,
               body: item.body,
               created_by: item.created_by,
@@ -94,6 +100,26 @@ export class ItemsService {
     const item = { subject, body, category, detectedLoc, providedLoc, location };
       // send to server with location name
     this.http.post(this.apiUrl + 'create', item).subscribe(res => {
+      this.router.navigate(['/']); // navigate to home page
+    }, error => {
+      console.log(error);
+    });
+  }
+
+  // ------------------------------------------------------------------------
+  // Create new item (send to the server to store in DB)
+  editItem(
+    subject: string,
+    body: string,
+    category: string,
+    detectedLoc: UserLocation,
+    providedLoc: UserLocation,
+    location: string,
+    itemId: number
+    ) {
+    const item = { subject, body, category, detectedLoc, providedLoc, location };
+      // send to server with location name
+    this.http.put(this.apiUrl + itemId, item).subscribe(res => {
       this.router.navigate(['/']); // navigate to home page
     }, error => {
       console.log(error);

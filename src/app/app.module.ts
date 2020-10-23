@@ -19,6 +19,7 @@ import { MarkerDialogComponent } from './map/marker-dialog/marker-dialog.compone
 import { ProfileComponent } from './profile/profile.component';
 import { NotificationComponent } from './notification/notification.component';
 import { DateAgoPipe } from './pipes/date-ago.pipe';
+import { EditItemComponent } from './items/edit-item/edit-item.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { DateAgoPipe } from './pipes/date-ago.pipe';
     MarkerDialogComponent,
     ProfileComponent,
     NotificationComponent,
-    DateAgoPipe
+    DateAgoPipe,
+    EditItemComponent
   ],
   imports: [
     BrowserModule,

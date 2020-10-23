@@ -19,7 +19,10 @@
           </small>
         </p>
       </div>
-
+      <mat-action-row>
+        <button mat-raised-button color="primary" (click) = "onEditItem(item.id)">Edit</button>
+        <button mat-raised-button color="warn">Delete</button>
+      </mat-action-row>
     </mat-expansion-panel>
   </mat-accordion>
 </div>
