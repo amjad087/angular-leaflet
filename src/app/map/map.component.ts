@@ -25,6 +25,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   mapLoaded = false;
   isLoading = true;
   isChecked = false;
+
+  // Silder's Setting Values
   autoTicks = true;
   disabled = false;
   invert = true;
@@ -103,6 +105,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  // Setting slider's values based on the oldest item in the database
   private setSlider() {
     const category = this.isChecked ? 'B' : 'A';
     this.itemsService.getOldestItem(category).subscribe(res => {
@@ -115,6 +118,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         if (resultInMinutes === 0) {
           resultInMinutes = 1;
         }
+
+        // commented for now, if you want the slider's step to be in hours, months, and years as well, uncomment this
         /*
         const minutesInYear = 525600;
         const minutesInMonth = 43800;
@@ -202,6 +207,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     const minute = 1;
     const miliSecInMin = 60000;
     const calcMinutes = minute;
+
+    // commented for now, if you want the slider's step to be in hours, months, and years as well, uncomment this
+
     /*
     const minutesInYear = 525600;
     const minutesInMonth = 43800;
