@@ -107,7 +107,7 @@ export class ItemsService {
   }
 
   // ------------------------------------------------------------------------
-  // Create new item (send to the server to store in DB)
+  // Edit item (send to the server to store in DB)
   editItem(
     subject: string,
     body: string,
@@ -120,6 +120,15 @@ export class ItemsService {
     const item = { subject, body, category, detectedLoc, providedLoc, location };
       // send to server with location name
     this.http.put(this.apiUrl + itemId, item).subscribe(res => {
+      this.router.navigate(['/']); // navigate to home page
+    }, error => {
+      console.log(error);
+    });
+  }
+
+  // Delete item (from the server to delete delete from db)
+  deleteItem(itemId: number) {
+    this.http.delete(this.apiUrl + itemId).subscribe(res => {
       this.router.navigate(['/']); // navigate to home page
     }, error => {
       console.log(error);

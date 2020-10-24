@@ -1,7 +1,11 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import {coerceNumberProperty} from '@angular/cdk/coercion';
+import { ItemDialogComponent } from './item-dialog/item-dialog.component';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import {coerceNumberProperty} from '@angular/cdk/coercion';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { MatDialog } from '@angular/material/dialog';
 import * as L from 'leaflet';
+import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
 
 import { UserLocation } from './../models/user-location.model';
 import { Item } from '../models/item.model';
@@ -9,7 +13,6 @@ import { LocationService } from '../services/location.service';
 import { ItemsService } from '../services/items.service';
 import { MarkerService } from './../services/marker.service';
 import { Subscription } from 'rxjs';
-import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-map',
@@ -18,13 +21,17 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 })
 export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   private map: any;
+  private _tickInterval = 1;
+
   items: Item[] = null;
   itemsSub: Subscription;
   detectedLocation: UserLocation = null; // auto detected current location
   providedLocation: UserLocation = null; // user can change / provide location
   mapLoaded = false;
   isLoading = true;
-  isChecked = false;
+  isChecked = true;
+
+  dialogOpened = false;
 
   // Silder's Setting Values
   autoTicks = true;
@@ -41,11 +48,13 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   sliderStepsDate: any;
   displayText = '1';
 
+  locMarker: L.marker;
   constructor(
     private locService: LocationService,
     private itemsService: ItemsService,
     private markerService: MarkerService,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -92,16 +101,52 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
       tiles.addTo(this.map);
 
-      // draggable marker for provided location
+      // Adding provided location marker
       L.Marker.prototype.options.icon = this.markerService.iconDefault;
-      const marker = new L.marker([this.providedLocation.lat, this.providedLocation.lng], {draggable: 'true'});
-      marker.on('dragend', event => {
+      this.locMarker = L.marker([this.providedLocation.lat, this.providedLocation.lng]);
+      this.locMarker.on('dragend', event => {
         const position = event.target.getLatLng();
         this.locService.setProvidedLocation(position.lat, position.lng);
       });
-      this.map.addLayer(marker);
+      this.map.addLayer(this.locMarker);
 
-      this.getItems();
+      // Adding Location Search Control (location picker)
+      const provider = new OpenStreetMapProvider();
+      const searchControl = new GeoSearchControl({
+        // Search control options
+        provider,
+        style: 'bar',
+        autoClose: true,
+        keepResult: false,
+        marker: {
+          icon: this.markerService.iconDefault,
+          draggable: false,
+        },
+        searchLabel: 'Enter provided location', // search control display phrase
+        retainZoomLevel: true // if you want the map to zoom in when location is searched set it to false
+      });
+
+      // add search control to the map
+      this.map.addControl(searchControl);
+
+      // set location and marker values when a location is searched
+      this.map.on('geosearch/showlocation', (res) => {
+        const latLng = {
+          lat: res.location.y,
+          lng: res.location.x
+        };
+        this.locMarker.setLatLng(latLng);
+        this.locMarker.bindPopup(res.location.label).openPopup()	;
+        this.locMarker.icon = res.location.raw.icon;
+        this.locService.setProvidedLocation(latLng.lat, latLng.lng);
+        this.providedLocation = {
+          lat: latLng.lat,
+          lng: latLng.lng
+        };
+
+      });
+
+      this.getItems(); // getting items from the server (database)
     })
     .catch(err => {
       this.mapLoaded = false;
@@ -126,23 +171,43 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         } else {
           this.value = resultInMinutes;
         }
-        const sliderDate = this.addMinutes(new Date(), this.value);
+        const sliderDate = this.subtractMinutes(new Date(), this.value);
         this.sliderStepsDate = sliderDate.toLocaleDateString() + ', ' + sliderDate.toLocaleTimeString();
       }
-      this.initMap();
+
+      this.initMap(); // inint map after setting the slider up
+
     }, err => {
-      this.initMap();
+      this.initMap(); // if there is an error in getting items from the server, init the map
     });
 
   }
+
+  // -------------------------------------------------------------------
   // on creating new item event
-  onCreateItem() {
-    this.router.navigate(['/create-item']); // navigate to create item page
+  onCreateItem(evt: MouseEvent) {
+    const target = new ElementRef(evt.currentTarget);
+    let rightPos = (target.nativeElement as HTMLElement).getBoundingClientRect().right;
+    rightPos += 10; // getting righ position of the Create Item button (for showing dialog position)
+
+    // left postion of the dialog will will be right postion of the button + 10
+
+    this.dialogOpened = true;
+    const dialogRef = this.dialog.open(
+      ItemDialogComponent,
+      { data: {detectedLoc: this.detectedLocation, providedLoc: this.providedLocation, leftPos: rightPos }}
+    );
+    dialogRef.afterClosed().subscribe(result => {
+      this.dialogOpened = false;
+      this.getItems();
+    });
   }
 
+  // -------------------------------------------------------------------
+  // Get items from the server
   getItems() {
     const currDate = new Date();
-    const itemsDate = this.addMinutes(currDate, this.value);
+    const itemsDate = this.subtractMinutes(currDate, this.value);
 
     this.markerService.removeMarkers(this.map);
     const category = this.isChecked ? 'B' : 'A';
@@ -153,50 +218,57 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  // -------------------------------------------------------------------
+  // on category slide change event
   public onSlideToggle(event: MatSlideToggleChange) {
     this.isChecked = event.checked;
-    this.getItems();
+    this.getItems(); // get items when category is changed
   }
 
+  // -------------------------------------------------------------------
   // set map dragging to false when mouse enters the slider div,
   // otherwise map also gets dragged with slider
   DisableMapDragging() {
     this.map.dragging.disable();
   }
 
+  // -------------------------------------------------------------------
   // enabling map dragging when mouse leaves the slider div
   EnableMapDragging() {
     this.map.dragging.enable();
   }
 
+  // -------------------------------------------------------------------
+  // on date slider changed event
   onSliderChange(event: any) {
     console.log(this.value);
-    const sliderDate = this.addMinutes(new Date(), this.value);
+    const sliderDate = this.subtractMinutes(new Date(), this.value);
     this.sliderStepsDate = sliderDate.toLocaleDateString() + ', ' + sliderDate.toLocaleTimeString();
     this.getItems();
   }
 
+  // -------------------------------------------------------------------
+  // get tick intervals (for date slider)
   get tickInterval(): number | 'auto' {
     return this.showTicks ? (this.autoTicks ? 'auto' : this._tickInterval) : 0;
   }
   set tickInterval(value) {
     this._tickInterval = coerceNumberProperty(value);
   }
-  private _tickInterval = 1;
 
-  addMinutes(date, minutes) {
-
+  // -------------------------------------------------------------------
+  // Subtracte minutes (minutes are slider steps) to get the desired date
+  subtractMinutes(date, minutes) {
     const minute = 1;
     const miliSecInMin = 60000;
     const calcMinutes = minute;
-
     const calcMiliSecs = calcMinutes * miliSecInMin;
     return new Date(date.getTime() - (minutes * calcMiliSecs));
   }
 
   ngOnDestroy() {
     if (this.itemsSub) {
-      this.itemsSub.unsubscribe();
+      this.itemsSub.unsubscribe(); // unsub to the subscription
     }
   }
 

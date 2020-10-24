@@ -115,6 +115,23 @@ exports.updateItem = (req, res, nex) => {
   });
 }
 
+// delete Item
+exports.deleteItem = (req, res, nex) => {
+  Item.deleteOne({_id: req.params.itemId, created_by: req.userData.username})
+  .then(result => {
+    //User created, send the response to frontend
+    res.status(201).json({
+      message: 'Item deleted Successfully!',
+    });
+  })
+  .catch(err => {
+    console.log(err);
+    res.status(500).json({
+      message: 'Item could not be deleted!'
+    });
+  });
+}
+
 // get items based on category (A, B)
 exports.getCategoryItems = (req, res, next) => {
 

@@ -11,6 +11,7 @@ router.get('/oldest-item/:category', checkAuth, itemController.getOldestItem);
 router.get('/item/:itemId', checkAuth, itemController.getItem);
 router.get('', checkAuth, itemController.getAllItems);
 router.put('/:itemId', checkAuth, itemController.updateItem);
+router.delete('/:itemId', checkAuth, itemController.deleteItem);
 router.get('/category', checkAuth, itemController.getCategoryItems);
 
 module.exports = router;

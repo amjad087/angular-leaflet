@@ -20,6 +20,8 @@ import { ProfileComponent } from './profile/profile.component';
 import { NotificationComponent } from './notification/notification.component';
 import { DateAgoPipe } from './pipes/date-ago.pipe';
 import { EditItemComponent } from './items/edit-item/edit-item.component';
+import { ItemDialogComponent } from './map/item-dialog/item-dialog.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +36,9 @@ import { EditItemComponent } from './items/edit-item/edit-item.component';
     ProfileComponent,
     NotificationComponent,
     DateAgoPipe,
-    EditItemComponent
+    EditItemComponent,
+    ItemDialogComponent,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,

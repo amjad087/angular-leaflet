@@ -1,7 +1,11 @@
 <div *ngIf="isLoading">
   <mat-spinner></mat-spinner>
 </div>
+<!-- Side bar for displaying items -->
 <div class="map-side-bar" *ngIf="!isLoading && mapLoaded">
+  <div style="width: 100%; text-align: center;" *ngIf="!items || (items.length === 0 && !isLoading)">
+    <mat-card>No Item to Display</mat-card>
+  </div>
   <div class="side-item" *ngFor="let item of items">
     <div class="side-inner-item">
       <h4>{{item.created_by}}</h4>
@@ -11,21 +15,18 @@
       <h3>[{{item.subject}}]</h3>
       <h5>{{item.created_at | dateAgo}}</h5>
     </div>
-    <!-- <div class="side-inner-item">
-      <h3>&nbsp;</h3>
-      <h5>{{item.created_at | dateAgo}}</h5>
-    </div> -->
   </div>
 </div>
 <div class="map-container">
   <div class="map-frame">
     <div id="map">
       <div class="top-overlay" *ngIf="!isLoading">
-        <button mat-raised-button color="accent" (click) = "onCreateItem()"  *ngIf="!isLoading && mapLoaded">
+        <!-- Create New Item Button -->
+        <button mat-raised-button color="accent" [disabled] = "dialogOpened" (click) = "onCreateItem($event)"  *ngIf="!isLoading && mapLoaded">
           <mat-icon>add_circle_outline</mat-icon>
         </button>
-        <mat-slide-toggle name="category-toggle" (change)="onSlideToggle($event)"></mat-slide-toggle>
-        <p>&nbsp;</p>
+        <!-- Category Toggle -->
+        <mat-slide-toggle name="category-toggle" [checked] = "isChecked" [disabled] = "dialogOpened" (change)="onSlideToggle($event)"></mat-slide-toggle>
       </div>
       <div
         class="slider-contianer"
@@ -33,9 +34,10 @@
         (mouseenter) = "DisableMapDragging()"
         (mouseleave) = "EnableMapDragging()"
       >
+      <!-- Slider used for get items from the server -->
         <mat-slider
           class="example-margin"
-          [disabled]="disabled"
+          [disabled]="dialogOpened"
           [invert]="invert"
           [max]="max"
           [min]="min"
@@ -46,10 +48,8 @@
           [vertical]="vertical"
           (change)="onSliderChange($event)"
         >
-        <!-- <span class="mat-slider-thumb-label-text">{{displayText}}</span> -->
-      </mat-slider>
-
-        <h5 class="slider-date">{{sliderStepsDate}}</h5>
+        </mat-slider>
+        <h5 class="slider-date">{{sliderStepsDate}}</h5> <!-- Showing date based on the slider steps-->
       </div>
     </div>
   </div>

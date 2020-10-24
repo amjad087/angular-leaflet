@@ -31,4 +31,8 @@ export class ProfileComponent implements OnInit {
     this.router.navigate(['/edit-item', itemId]);
   }
 
+  onDeleteItem(itemId: number) {
+    this.itemService.deleteItem(itemId);
+  }
+
 }
