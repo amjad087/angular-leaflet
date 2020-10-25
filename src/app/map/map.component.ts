@@ -5,11 +5,11 @@ import {coerceNumberProperty} from '@angular/cdk/coercion';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import * as L from 'leaflet';
-import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
 
 import { UserLocation } from './../models/user-location.model';
 import { Item } from '../models/item.model';
 import { LocationService } from '../services/location.service';
+import { AuthService } from './../services/auth.service';
 import { ItemsService } from '../services/items.service';
 import { MarkerService } from './../services/marker.service';
 import { Subscription } from 'rxjs';
@@ -50,6 +50,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
   locMarker: L.marker;
   constructor(
+    private authService: AuthService,
     private locService: LocationService,
     private itemsService: ItemsService,
     private markerService: MarkerService,
@@ -102,50 +103,13 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       tiles.addTo(this.map);
 
       // Adding provided location marker
-      L.Marker.prototype.options.icon = this.markerService.iconDefault;
-      this.locMarker = L.marker([this.providedLocation.lat, this.providedLocation.lng]);
-      this.locMarker.on('dragend', event => {
-        const position = event.target.getLatLng();
-        this.locService.setProvidedLocation(position.lat, position.lng);
-      });
-      this.map.addLayer(this.locMarker);
-
-      // Adding Location Search Control (location picker)
-      const provider = new OpenStreetMapProvider();
-      const searchControl = new GeoSearchControl({
-        // Search control options
-        provider,
-        style: 'bar',
-        autoClose: true,
-        keepResult: false,
-        marker: {
-          icon: this.markerService.iconDefault,
-          draggable: false,
-        },
-        searchLabel: 'Enter provided location', // search control display phrase
-        retainZoomLevel: true // if you want the map to zoom in when location is searched set it to false
-      });
-
-      // add search control to the map
-      this.map.addControl(searchControl);
-
-      // set location and marker values when a location is searched
-      this.map.on('geosearch/showlocation', (res) => {
-        const latLng = {
-          lat: res.location.y,
-          lng: res.location.x
-        };
-        this.locMarker.setLatLng(latLng);
-        this.locMarker.bindPopup(res.location.label).openPopup()	;
-        this.locMarker.icon = res.location.raw.icon;
-        this.locService.setProvidedLocation(latLng.lat, latLng.lng);
-        this.providedLocation = {
-          lat: latLng.lat,
-          lng: latLng.lng
-        };
-
-      });
-
+      // L.Marker.prototype.options.icon = this.markerService.iconDefault;
+      // this.locMarker = L.marker([this.providedLocation.lat, this.providedLocation.lng]);
+      // this.locMarker.on('dragend', event => {
+      //   const position = event.target.getLatLng();
+      //   this.locService.setProvidedLocation(position.lat, position.lng);
+      // });
+      // this.map.addLayer(this.locMarker);
       this.getItems(); // getting items from the server (database)
     })
     .catch(err => {
@@ -200,6 +164,39 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     dialogRef.afterClosed().subscribe(result => {
       this.dialogOpened = false;
       this.getItems();
+    });
+  }
+
+  onEditItem(evt: MouseEvent, itemId: number) {
+    const target = new ElementRef(evt.currentTarget);
+    let rightPos = (target.nativeElement as HTMLElement).getBoundingClientRect().right;
+    rightPos += 10; // getting righ position of the Create Item button (for showing dialog position)
+
+    // left postion of the dialog will will be right postion of the button + 10
+
+    this.dialogOpened = true;
+    const dialogRef = this.dialog.open(
+      ItemDialogComponent,
+      { data:
+        {
+          detectedLoc: this.detectedLocation,
+          providedLoc: this.providedLocation,
+          leftPos: rightPos,
+          itemId
+        }
+      }
+    );
+    dialogRef.afterClosed().subscribe(result => {
+      this.dialogOpened = false;
+      this.getItems();
+    });
+  }
+
+  onDeleteItem(itemId) {
+    this.itemsService.deleteItem(itemId).subscribe(res => {
+      this.getItems();
+    }, err => {
+      console.log(err);
     });
   }
 
@@ -264,6 +261,20 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     const calcMinutes = minute;
     const calcMiliSecs = calcMinutes * miliSecInMin;
     return new Date(date.getTime() - (minutes * calcMiliSecs));
+  }
+
+  getUser() {
+    return this.authService.getUsername();
+  }
+
+  add3Dots(value: string) {
+    const limit = 20;
+    const dots = '...';
+    if (value.length > limit) {
+      // you can also use substr instead of substring
+      value = value.substring(0, limit) + dots;
+    }
+    return value;
   }
 
   ngOnDestroy() {

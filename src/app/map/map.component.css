@@ -2,7 +2,7 @@ mat-spinner {
   margin: auto;
 }
 mat-card {
-  width: 90%;
+  width: 100%;
   margin: auto;
 }
 
@@ -48,13 +48,9 @@ mat-card {
   margin: 5px;
   z-index: 1001;
   display: flex;
-  flex-direction: column;
-  width: 100%;
+  width: 50%;
   justify-content: space-between;
-  align-items: flex-start;
-  max-width: 100px;
-  height: 50%;
-
+  align-items: center;
 }
 .mat-icon {
   vertical-align: middle;
@@ -90,7 +86,7 @@ mat-card {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  top: 35%;
+  top: 77%;
   z-index: 1001;
   width: 70%;
   margin: auto;
@@ -101,7 +97,7 @@ mat-card {
 }
 
 mat-slider {
-  width: 90%;
+  width: 95%;
 }
 
 /* .leaflet-bottom,
@@ -118,12 +114,22 @@ mat-slider {
 }
 
 mat-card {
-  width: 80%;
+  width: 90%;
   margin: auto;
 }
 
+.sidebar-button {
+  width: auto!important;
+  min-width: unset!important;
+  font-size: 11px;
+  margin-right: 5px;
+  text-align: center;
+  margin-top: 10px;
+}
+
+
 .side-item {
-  width: 98%;
+  width: 100%;
   display: block;
   /* background-color: #edd;
   border: 1px solid #dcc; */
@@ -136,7 +142,6 @@ mat-card {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 5px 10px;
 
 }
 

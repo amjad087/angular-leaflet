@@ -57,6 +57,7 @@ exports.loginUser = (req, res, next) => {
     const response = {
       message: 'user logged in',
       userId: fetchedUser._id,
+      username: fetchedUser.username,
       token: token,
       expiresIn: 3600 // in seconds = 1 hr
     }

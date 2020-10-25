@@ -15,6 +15,7 @@ export class AuthService {
 
   private token;
   private userId: string;
+  private username: string;
   private userAuthenticated = false;
   private authTokenListner = new Subject<boolean>(); // to reflect login and logout in other components e.g. header component
   private tokenTimer: any;
@@ -51,6 +52,10 @@ export class AuthService {
     return this.userId;
   }
 
+  getUsername() {
+    return this.username;
+  }
+
   // Auto login (check if the user is already logged in, no need to log in on application reload)
   autoLogin() {
     const authData = this.getAuthData(); // get auth data from local storage
@@ -60,6 +65,7 @@ export class AuthService {
 
     const token = authData.token;
     const userId = authData.userId;
+    const username = authData.username;
     const expDate = authData.expDate;
 
     const expiryDate = new Date(expDate);
@@ -67,6 +73,7 @@ export class AuthService {
     if (expiresIn > 0) { // if the token is not expired
       this.token = token;
       this.userId = userId;
+      this.username = username;
       const expDuration = expiresIn / 1000;
       this.setTokenTimer(expDuration); // setting token timer (for auto logout on token expiration)
       this.userAuthenticated = true;
@@ -84,6 +91,7 @@ export class AuthService {
       if (response.loginData.token) {
         this.token = response.loginData.token;
         this.userId = response.loginData.userId;
+        this.username = response.loginData.username;
         const expDuration = response.loginData.expiresIn;
         this.setTokenTimer(expDuration); // setting token timer (for auto logout on token expiration)
         this.saveAuthData(response.loginData); // save auth data in local storage of the browser
@@ -105,6 +113,7 @@ export class AuthService {
   private saveAuthData(loginData: any) {
     const token = loginData.token;
     const userId = loginData.userId;
+    const username = loginData.username;
     const expiresIn = loginData.expiresIn;
 
     const now = new Date();
@@ -112,6 +121,7 @@ export class AuthService {
 
     localStorage.setItem('token', token);
     localStorage.setItem('userId', userId);
+    localStorage.setItem('username', username);
     localStorage.setItem('expDate', expDate.toISOString());
   }
 
@@ -119,6 +129,7 @@ export class AuthService {
   private clearAuthData() {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
+    localStorage.removeItem('username');
     localStorage.removeItem('expDate');
   }
 
@@ -126,14 +137,16 @@ export class AuthService {
   private getAuthData() {
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
+    const username = localStorage.getItem('username');
     const expDate = localStorage.getItem('expDate');
-    if (!token || !userId || !expDate) {
+    if (!token || !userId || !expDate || !username) {
       return;
     }
 
     return {
       token,
       userId,
+      username,
       expDate
     };
   }
@@ -142,6 +155,7 @@ export class AuthService {
   logout() {
     this.token = null;
     this.userId = null;
+    this.username = null;
     this.userAuthenticated = false;
     this.clearAuthData(); // clear local storage
     this.authTokenListner.next(false); // to reflect in interested components

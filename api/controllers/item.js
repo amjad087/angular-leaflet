@@ -135,7 +135,7 @@ exports.deleteItem = (req, res, nex) => {
 // get items based on category (A, B)
 exports.getCategoryItems = (req, res, next) => {
 
-  Item.find({ 'category': req.query.category, 'created_by': req.userData.username }).sort({created_at:-1}).then(items => {
+  Item.find({ 'category': req.query.category }).sort({created_at:-1}).then(items => {
 
     let newItems = [];
     for (let item of items) {

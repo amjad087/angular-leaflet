@@ -32,7 +32,11 @@ export class ProfileComponent implements OnInit {
   }
 
   onDeleteItem(itemId: number) {
-    this.itemService.deleteItem(itemId);
+    this.itemService.deleteItem(itemId).subscribe(res => {
+      this.router.navigate(['/']);
+    }, err => {
+      console.log(err);
+    });
   }
 
 }

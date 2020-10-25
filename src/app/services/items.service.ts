@@ -128,11 +128,7 @@ export class ItemsService {
 
   // Delete item (from the server to delete delete from db)
   deleteItem(itemId: number) {
-    this.http.delete(this.apiUrl + itemId).subscribe(res => {
-      this.router.navigate(['/']); // navigate to home page
-    }, error => {
-      console.log(error);
-    });
+    return this.http.delete(this.apiUrl + itemId);
   }
 
 }

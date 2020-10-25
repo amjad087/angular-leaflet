@@ -12,6 +12,6 @@ router.get('/item/:itemId', checkAuth, itemController.getItem);
 router.get('', checkAuth, itemController.getAllItems);
 router.put('/:itemId', checkAuth, itemController.updateItem);
 router.delete('/:itemId', checkAuth, itemController.deleteItem);
-router.get('/category', checkAuth, itemController.getCategoryItems);
+router.get('/category', itemController.getCategoryItems);
 
 module.exports = router;

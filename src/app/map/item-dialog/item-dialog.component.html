@@ -2,10 +2,30 @@
   <div *ngIf="isLoading">
     <mat-spinner></mat-spinner>
   </div>
-  <form [formGroup] = "form" (ngSubmit) = "onCreateItem()" *ngIf="!isLoading">
+  <form [formGroup] = "form" (ngSubmit) = "onCreateOrEditItem()" *ngIf="!isLoading">
     <div class="create-item">
-      <h1>Create Item</h1>
+      <h1>{{isEditMode ? 'Edit' : 'Create'}} Item</h1>
 
+      <mat-form-field class="example-full-width">
+        <input
+          matInput
+          placeholder="Enter Provided Location"
+          name="search_location"
+          formControlName="search_location"
+          [matAutocomplete]="auto"
+        >
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+          <mat-option *ngIf="isSearchLoading" class="is-loading">Loading...</mat-option>
+          <ng-container *ngIf="!isSearchLoading">
+            <mat-option *ngFor="let loc of filteredLocations" [value]="loc.label">
+              <span>{{loc.label}}</span>
+            </mat-option>
+          </ng-container>
+        </mat-autocomplete>
+        <mat-error *ngIf="form.get('search_location').touched && form.get('search_location').invalid">
+          Please provide a location!
+        </mat-error>
+      </mat-form-field>
       <mat-form-field class="example-full-width">
         <mat-label>Subject</mat-label>
         <input
@@ -43,7 +63,7 @@
     <mat-divider></mat-divider>
     <div class="actions">
       <mat-card-actions>
-        <button mat-raised-button color = "primary" type="submit">Create</button>
+        <button mat-raised-button color = "primary" type="submit">{{isEditMode ? 'Update' : 'Create'}}</button>
         <button mat-dialog-close mat-raised-button color = "warn" type="button">Cancel</button>
       </mat-card-actions>
     </div>
