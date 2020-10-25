@@ -29,7 +29,7 @@
     <div id="map">
       <div class="top-overlay" *ngIf="!isLoading">
         <!-- Create New Item Button -->
-        <button mat-raised-button color="accent" [disabled] = "dialogOpened" (click) = "onCreateItem($event)"  *ngIf="!isLoading && mapLoaded">
+        <button #createBtn mat-raised-button color="accent" name="createBtn" [disabled] = "dialogOpened" (click) = "onCreateItem($event)"  *ngIf="!isLoading && mapLoaded">
           <mat-icon>add_circle_outline</mat-icon>
         </button>
         <!-- Category Toggle -->

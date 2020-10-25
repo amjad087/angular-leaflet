@@ -1,18 +1,18 @@
-import { ItemDialogComponent } from './item-dialog/item-dialog.component';
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import {coerceNumberProperty} from '@angular/cdk/coercion';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatDialog } from '@angular/material/dialog';
+import { Subscription } from 'rxjs';
 import * as L from 'leaflet';
 
 import { UserLocation } from './../models/user-location.model';
 import { Item } from '../models/item.model';
 import { LocationService } from '../services/location.service';
+import { ItemDialogComponent } from './item-dialog/item-dialog.component';
 import { AuthService } from './../services/auth.service';
 import { ItemsService } from '../services/items.service';
 import { MarkerService } from './../services/marker.service';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-map',
@@ -48,6 +48,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   sliderStepsDate: any;
   displayText = '1';
 
+  @ViewChild('createBtn', {read: ElementRef}) createBtnRef;
+
   locMarker: L.marker;
   constructor(
     private authService: AuthService,
@@ -63,7 +65,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
+    // console.log(this.createBtnRef.nativeElement.getBoundingClientRect());
     this.setSlider();
+
   }
 
   private initMap() {
@@ -169,7 +173,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onEditItem(evt: MouseEvent, itemId: number) {
     const target = new ElementRef(evt.currentTarget);
-    let rightPos = (target.nativeElement as HTMLElement).getBoundingClientRect().right;
+    let rightPos = this.createBtnRef.nativeElement.getBoundingClientRect().right;
     rightPos += 10; // getting righ position of the Create Item button (for showing dialog position)
 
     // left postion of the dialog will will be right postion of the button + 10
