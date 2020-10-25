@@ -9,7 +9,8 @@ import { UserLocation } from './../../models/user-location.model';
 import { LocationService } from './../../services/location.service';
 import { ItemsService } from './../../services/items.service';
 
-interface geoSearchResult {
+// results from leaflet geosearch interface
+interface GeoSearchResult {
   x: number; // lon
   y: number; // lat
   label: string; // formatted address
@@ -34,7 +35,7 @@ export class ItemDialogComponent implements OnInit {
   location = null;
   private detectedLocation: UserLocation = null;
   private providedLocation: UserLocation = null;
-  filteredLocations: geoSearchResult[] = [];
+  filteredLocations: GeoSearchResult[] = [];
   leftPos;
   isEditMode = false;
   item: Item = null;
@@ -78,6 +79,7 @@ export class ItemDialogComponent implements OnInit {
     });
 
     if (this.data.itemId) {
+      // first get the item (in editing mode)
       this.isEditMode = true;
       this.itemId = this.data.itemId;
       this.itemService.getItem(this.itemId)
@@ -119,6 +121,8 @@ export class ItemDialogComponent implements OnInit {
         this.isLoading = false; // set loading to false on any error as well
       });
     }
+
+    // Location search using leaflet-geosearch plugin (using openstreetmap)
     const provider = new OpenStreetMapProvider();
     this.form.get('search_location').valueChanges
     .pipe(
@@ -130,8 +134,8 @@ export class ItemDialogComponent implements OnInit {
       }),
       switchMap(term => provider.search({ query: term }))
     )
-    .subscribe((results: geoSearchResult[]) => {
-      if(results.length > 0) {
+    .subscribe((results: GeoSearchResult[]) => {
+      if (results.length > 0) {
         this.isSearchLoading = false;
         this.errorMsg = '';
         this.filteredLocations = results;
@@ -139,10 +143,13 @@ export class ItemDialogComponent implements OnInit {
     });
   }
 
+  // creating or editing an item
   onCreateOrEditItem() {
     if (!this.form.valid) {
       return;
     }
+
+    // If location is got from location search (used for editing.. in editing mode, same loc can also be used)
     this.location = this.form.value.search_location;
     if (this.filteredLocations.length > 0) {
       const fileteredLoc = this.filteredLocations.find(loc => loc.label === this.location);
@@ -156,7 +163,7 @@ export class ItemDialogComponent implements OnInit {
     if (this.detectedLocation && this.providedLocation && this.location) {
       console.log(this.detectedLocation, this.providedLocation, this.location);
       const category = this.isChecked ? 'B' : 'A';
-      if(this.isEditMode) {
+      if (this.isEditMode) { // editing mode
         this.itemService.editItem(
           this.form.value.subject,
           this.form.value.item_body,
@@ -164,7 +171,7 @@ export class ItemDialogComponent implements OnInit {
           this.providedLocation, this.location,
           this.itemId
         );
-      } else {
+      } else { // creating mode
         this.itemService.createItem(
           this.form.value.subject,
           this.form.value.item_body,
@@ -179,7 +186,7 @@ export class ItemDialogComponent implements OnInit {
     }
   }
 
-  displayFn(loc: geoSearchResult) {
+  displayFn(loc: GeoSearchResult) { // used for location search auto complete formating
     if (!loc) {
       return '';
     }
